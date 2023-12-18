@@ -1,0 +1,16 @@
+
+html[data-theme="dark"] {
+  --background-color: #{$dark-mode-bg-color};
+  --color: #{$light-mode-bg-color};
+
+  --primary-color: #{$dark-mode-primary-color};
+  --secondary-color: #{$dark-mode-secondary-color};
+}
+
+html[data-theme="light"] {
+  --background-color: #{$light-mode-bg-color};
+  --color: #{$dark-mode-bg-color};
+
+  --primary-color: #{$light-mode-primary-color};
+  --secondary-color: #{$light-mode-secondary-color};
+}

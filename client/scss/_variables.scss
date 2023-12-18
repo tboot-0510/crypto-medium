@@ -1,0 +1,115 @@
+
+$primary: #042040;
+$secondary: #3a506b;
+$success: #5f8160;
+$danger: #d7596a;
+$warning: #d1c982;
+$light: #f7f9fc;
+
+$gray-50: #FAFAFA;
+$gray-100: #F4F4F5;
+$gray-200: #E4E4E7;
+$gray-300: #D4D4D8;
+$gray-400: #A1A1AA;
+$gray-500: #71717A;
+$gray-600: #52525B;
+$gray-700: #3F3F46;
+$gray-800: #27272A;
+$gray-900: #18181B;
+
+$main-font-regular: 'Inter-Regular';
+$main-font-medium: 'Inter-Medium';
+$main-font-bold: 'Inter-Bold';
+$main-font-semi-bold: 'Inter-SemiBold';
+$title-font: 'Inter-ExtraBold';
+
+$sidebar-bg: $primary;
+$sidebar-nav-icon-width: 4.2rem;
+$sidebar-nav-icon-height: 1.4rem;
+$sidebar-nav-icon-font-size: $sidebar-nav-icon-height;
+
+$link-decoration: underline;
+$link-hover-color: $secondary;
+
+$nav-link-padding-y: 0.2rem;
+$nav-link-padding-x: 0.5rem;
+
+$nav-tabs-link-active-color: $primary;
+$nav-tabs-border-width: 2px;
+
+$breadcrumb-active-color: $gray-900;
+$breadcrumb-divider-color: $gray-200;
+
+$toast-color: $gray-900;
+$toast-header-color: $gray-900;
+$popover-arrow-width: 0;
+$popover-arrow-height: 0;
+$popover-body-padding-x: 0;
+$popover-body-padding-y: 8px;
+
+$form-label-color: $gray-700;
+
+
+
+/* -- From & for Tailorwind -- */
+
+/* Spacings */
+$spacing-xxs: 4px;
+$spacing-xs: 8px;
+$spacing-s: 12px;
+$spacing-m: 16px;
+$spacing-l: 24px;
+$spacing-xl: 32px;
+$spacing-xxl: 48px;
+$spacing-3xl: 64px;
+$spacing-4xl: 128px;
+$spacing-5xl: 256px;
+
+/* z-index variables */
+$toaster-z-index: 999999;
+
+$over-header-z-index: 100000;
+
+$header-z-index: 99999;
+
+$sub-header-z-index-0: 10000;
+$sub-header-z-index-1: 10001;
+$sub-header-z-index-2: 10002;
+$sub-header-z-index-3: 10003;
+$sub-header-z-index-4: 10004;
+
+$standard-z-index-0: 1000;
+$standard-z-index-1: 1001;
+$standard-z-index-2: 1002;
+$standard-z-index-3: 1003;
+$standard-z-index-4: 1004;
+
+$panel-z-index: 200000;
+
+$below-standard-z-index-1: 1;
+$below-standard-z-index-2: 2;
+$below-standard-z-index-3: 3;
+$below-standard-z-index-4: 4;
+$below-standard-z-index-5: 5;
+
+$underground-z-index: -1;
+
+/* Main variables */
+$header-height: 80px;
+$standard-radius: 25px;
+$mobile-width: 992px;
+$mobile-width-plus-one: 993px;
+$website-max-width: 1256px;
+$desktop-padding: $spacing-4xl;
+$mobile-padding: $spacing-l;
+$max-width-plus-paddings: calc($website-max-width + $desktop-padding);
+$mobile-menu-height: $spacing-3xl;
+
+
+/* Dark theme */
+$dark-mode-bg-color: #131312;
+$dark-mode-primary-color: #1f1f1e;
+$dark-mode-secondary-color: $gray-600;
+$light-mode-bg-color: white;
+$light-mode-primary-color: #FAFAFA;
+$light-mode-secondary-color: $gray-600;

@@ -1,0 +1,49 @@
+@mixin colors() {
+    --modal-overlay: #00000080;
+    
+    --primary: #0e1627;
+    --secondary: #042040;
+    --success: #5f8160;
+    --danger: #d7596a;
+    --selected: #0ACE50;
+    --warning: #d1c982;
+    /* Grayscale */
+    --gray-50: #FAFAFA;
+    --gray-100: #F4F4F5;
+    --gray-200: #E4E4E7;
+    --gray-300: #D4D4D8;
+    --gray-400: #A1A1AA;
+    --gray-500: #71717A;
+    --gray-600: #52525B;
+    --gray-700: #3F3F46;
+    --gray-800: #27272A;
+    --gray-900: #18181B;
+    --black: #000015;
+    --white: white;
+
+    --bg-color: #1f2025;
+
+    --darkgrey: #282828;
+    --ghostgrey: #383838;
+    --stronggrey: #494949;
+    --lightgrey: #b3b3b3;
+
+    --grade-A-color: #a1e702; 
+    --grade-B-color: #a4d502; 
+    --grade-C-color: #d6b502; 
+    --grade-D-color: #e57902; 
+    --grade-E-color: #e5405e; 
+
+    --bg-color: rgba(242,248,240,255);
+    --static11: rgba(235,240,233,255);
+    --textLight: #131f0f;
+    --backgroundLight: #f3f8f1;
+    --primaryLight: #183a1d;
+    --secondaryLight: #cce2c5;
+    --thirdLight: #385E2F;
+    --fourthLight: #5F8440;
+    --accentLight: #5a9348;
+    --static1: rgba(0, 0, 0, 0.03);
+    --static2: #e7f2e5;
+
+}

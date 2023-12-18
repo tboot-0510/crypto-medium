@@ -1,0 +1,28 @@
+
+.header {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    transition: background-color 300ms linear;
+    border-bottom: solid 1px #242424;
+    width: 100%;
+    background-color: #FFC017;
+    justify-content: center;
+    display: flex;
+    z-index: 2;
+}
+
+.header-container {
+    margin: 0 64px;
+    max-width: 1192px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.header-items {
+    display: flex;
+    padding: 25px 0;
+    max-height: 75px;
+    flex-direction: row;
+}

@@ -1,0 +1,48 @@
+.suggestion-bar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 30px;
+    gap: 28px;
+    margin-right: auto;
+    margin-bottom: 12px;
+    margin-top: 12px;
+    padding-top: 24px;
+    width: 90%;
+    top: 57px;
+}
+
+.suggestion-bar-content {
+    max-width: 680px;
+    margin: 0 24px;
+    min-width: 0;
+    width: 100%;
+    display: flex;
+    border-bottom: solid 1px rgba(242, 242, 242, 1);
+    align-items: center;
+}
+
+.suggestion-bar-menu {
+    height: 39px;
+    box-shadow: rgb(242, 242, 242) 1px;
+    overflow: hidden;
+    position: relative;
+}
+
+.suggestion-bar-menu-items {
+    display: flex;
+    align-items: center;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    padding: 2px 0px;
+}
+
+.suggestion-bar-menu-item {
+    min-width: max-content;
+    // border-bottom: 1px solid rgb(36, 36, 36);
+    margin-right: 24px; 
+    border-bottom: 1px solid rgb(242, 242, 242);
+    padding-bottom: 16px;
+    display: block;
+}
+

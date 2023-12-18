@@ -1,0 +1,25 @@
+@mixin h5() {
+    // font-family: var(--title-font);
+    font-style: normal;
+    font-size: 26px;
+    // text-transform: var(--text-transform-attribute);
+    margin: 0;
+    padding: 0;
+}
+@mixin h6() {
+    font-family: var(--title-font);
+    font-style: normal;
+    font-size: 14px;
+    font-weight: 400;
+    margin: 0;
+    padding: 0;
+}
+
+@mixin standardBackgroundWithBorder(
+    $backgroundColor: var(--elevated-base),
+    $secondaryColor: var(--ghostgrey),
+    $borderRadius: 1px
+) {
+    background: linear-gradient($backgroundColor, $backgroundColor) padding-box, var(--stronggrey) border-box;
+    border: $borderRadius solid transparent;
+}

@@ -1,0 +1,31 @@
+.avatar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 3px;
+}
+
+.dropdown-portal {
+    border-radius: 3px;
+    width: 264px;
+    max-height: 861.781px;
+    position: absolute;
+    inset: 0px auto auto 0px;
+    transition: opacity 300ms ease 0s;
+    z-index: 700;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 4px, rgba(0, 0, 0, 0.15) 0px 2px 8px;
+    background-color: white;
+}
+
+.dropdown-content {
+    padding: 16px 0px;
+}
+
+.dropdown-item {
+    padding: 8px 24px;
+    font-size: 14px;
+    color: #6B6B6B;
+    font-weight: 400;
+    display: flex;
+    flex-direction: row;
+}

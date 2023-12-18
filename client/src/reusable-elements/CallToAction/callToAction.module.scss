@@ -1,0 +1,53 @@
+.primary-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid transparent;
+    padding: 8px 20px;
+    border-radius: 99em;
+    background-size: 200% 100%;
+    transition: background-position 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+.secondary-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid transparent;
+    border-radius: 16px;
+    height: 54px;
+    cursor: pointer;
+}
+
+.third-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid transparent;
+    border-radius: 16px;
+    height: 54px;
+    cursor: pointer;
+}
+
+.tiny-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    height: 42px;
+    cursor: pointer;
+}
+
+
+.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.additional-pill-container {
+    position: absolute;
+    top: -42px;
+    right: -24px;
+}

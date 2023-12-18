@@ -1,0 +1,21 @@
+.banner {
+    background-color: rgb(249, 249, 249);
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding: 12px 0px;
+    display: flex;
+    font-weight: 400;
+}
+
+
+.banner-content {
+    align-items: center;
+    position: relative;
+    display: flex;
+}
+
+.banner-close {
+    position: absolute;
+    right: 24px;
+}
