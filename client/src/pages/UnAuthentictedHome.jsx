@@ -9,10 +9,10 @@ const UnAuthentictedHome = () => {
   }));
   console.log("unat", user);
   return (
-    <>
+    <div style={{ minHeight: "100vh" }}>
       <Header />
       <Hero />
-    </>
+    </div>
   );
 };
 

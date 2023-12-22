@@ -97,6 +97,17 @@ h5 {
     display: flex;
     flex: 1;
 }
+
+.f-2 {
+    display: flex;
+    flex: 1 1 auto;
+}
+
+.f-3 {
+    display: flex;
+    flex: 1 0 auto;
+}
+
 .f-1-desktop {
     @media screen and (min-width: 992px) {
         display: flex;

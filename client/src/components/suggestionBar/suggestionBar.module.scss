@@ -8,8 +8,9 @@
     margin-bottom: 12px;
     margin-top: 12px;
     padding-top: 24px;
-    width: 90%;
-    top: 57px;
+    position: sticky;
+    background-color: white;
+    z-index: 100;
 }
 
 .suggestion-bar-content {
@@ -27,6 +28,7 @@
     box-shadow: rgb(242, 242, 242) 1px;
     overflow: hidden;
     position: relative;
+    box-sizing: border-box;
 }
 
 .suggestion-bar-menu-items {
@@ -35,11 +37,12 @@
     overflow-x: scroll;
     overflow-y: hidden;
     padding: 2px 0px;
+    cursor: pointer;
+    box-sizing: border-box;
 }
 
 .suggestion-bar-menu-item {
     min-width: max-content;
-    // border-bottom: 1px solid rgb(36, 36, 36);
     margin-right: 24px; 
     border-bottom: 1px solid rgb(242, 242, 242);
     padding-bottom: 16px;

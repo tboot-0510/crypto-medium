@@ -4,8 +4,11 @@ import mediumLogo from "../../assets/medium_icon.svg";
 import Search from "../search/Search";
 import { notificationIcon, writeBlogIcon } from "../../assets/icons";
 import AvatarMenu from "../avatar/AvatarMenu";
+import { useNavigate } from "react-router-dom";
 
 const NavBar = () => {
+  const navigate = useNavigate();
+
   return (
     <div className={styles.navbar}>
       <div className="f-1 ai-c">
@@ -18,6 +21,7 @@ const NavBar = () => {
         <div className="f mr-32">
           <a
             className="fd-r jc-c ai-c"
+            onClick={() => navigate("/new-story")}
             style={{ cursor: "pointer", color: "#6B6B6B", fontWeight: "400" }}
           >
             {writeBlogIcon}

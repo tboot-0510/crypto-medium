@@ -6,9 +6,6 @@ const handleLogin = async (req, res) => {
   const foundUser = users.find((user) => user.email === req.email);
   if (!foundUser) return res.sendStatus(401);
 
-  console.log("users", users);
-
-  // const result = await newUser.save();
   res.send(foundUser);
 };
 
@@ -19,8 +16,6 @@ const handleSignUp = async (req, res) => {
     return res.status(400).json({ message: "User params not provided" });
 
   const foundUser = await User.findByEmail(email);
-
-  console.log("foundUser", foundUser);
 
   if (foundUser.length != 0)
     return res.status(409).json({ message: "User already exists" }); //conflict
@@ -35,6 +30,29 @@ const handleSignUp = async (req, res) => {
     });
 
     const result = await newUser.save();
+
+    const accessToken = jwt.sign(
+      {
+        userId: newUser._id,
+      },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: "30s" }
+    );
+    const refreshToken = jwt.sign(
+      {
+        userId: newUser._id,
+      },
+      process.env.REFRESH_TOKEN_SECRET,
+      { expiresIn: "1d" }
+    );
+    res.cookie("jwt", refreshToken, {
+      httpOnly: true, // cookie is not accessible by other JS
+      sameSite: "None",
+      secure: true,
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+    // save in memory
+    res.json({ accessToken });
     res.status(200).send(result);
   } catch (err) {
     res.status(500).json({ message: err.message });

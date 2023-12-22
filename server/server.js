@@ -2,11 +2,13 @@ import express from "express";
 import cors from "cors";
 import corsOptions from "./config/corsOptions.js";
 import authRouter from "./routes/auth.js";
+import feedRouter from "./routes/feed.js";
 import { createServer } from "http";
 import { connect } from "mongoose";
+import postRouter from "./routes/post.js";
+import "dotenv/config";
 
-const uri =
-  "mongodb+srv://bootthom:GBzqcKmOxwnOGrsT@cluster0.mrfymag.mongodb.net/medium?retryWrites=true&w=majority&ssl=true";
+const uri = process.env.MONGODB_URI;
 
 const app = express();
 const PORT = 5000;
@@ -29,3 +31,5 @@ connect(uri)
   .catch((err) => console.error(err));
 
 app.use("/auth", authRouter);
+app.use("/feed", feedRouter);
+app.use("/post", postRouter);

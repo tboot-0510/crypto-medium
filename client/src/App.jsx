@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import Modal from "./components/modal/Modal";
 import AuthenticatedRoute from "./routes/AuthenticatedRoute";
 import UnAuthentictedHome from "./pages/UnAuthentictedHome";
+import Write from "./pages/Write";
 
 function App() {
   return (
@@ -16,7 +17,15 @@ function App() {
             <Home />
             // </AuthenticatedRoute>
           }
-        ></Route>
+        />
+        <Route
+          path="/new-story"
+          element={
+            // <AuthenticatedRoute fallback={<UnAuthentictedHome />}>
+            <Write />
+            // </AuthenticatedRoute>
+          }
+        />
       </Routes>
       <Modal />
     </>

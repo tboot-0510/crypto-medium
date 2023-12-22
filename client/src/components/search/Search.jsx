@@ -6,6 +6,7 @@ import styles from "./search.module.scss";
 const Search = () => {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
+
   function handleKeyDown(e) {
     if (e.key == "Enter" && query) {
       const q = query;
