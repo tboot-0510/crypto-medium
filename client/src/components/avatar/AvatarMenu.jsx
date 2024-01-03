@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styles from "./avatarMenu.module.scss";
 import GoogleIcon from "../../assets/google_icon.svg";
 import { createPortal } from "react-dom";
@@ -10,11 +10,14 @@ import {
   starIcon,
   storiesIcon,
 } from "../../assets/icons";
+import { logoutUser } from "../../store/slices/userSlice";
+import { logoutApiHandler } from "../../api/loginApi";
 
 const AvatarMenu = () => {
   const { user } = useSelector((state) => ({
-    user: state.user.informations.user,
+    user: state.user.informations,
   }));
+  const dispatch = useDispatch();
   const { navigate } = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(null);
 
@@ -33,21 +36,32 @@ const AvatarMenu = () => {
     };
   }, []);
 
+  const logout = () => {
+    logoutApiHandler().then((resp) => {
+      if (resp.status === 200) {
+        dispatch(logoutUser());
+        return;
+      }
+    });
+  };
+
+  const userId = user?.id;
+
   const dropdownOptions = [
     {
       icon: profileIcon,
       title: "Profil",
-      onClick: () => navigate(`/user/${user.id}`),
+      onClick: () => navigate(`/user/${userId}`),
     },
     {
       icon: libraryIcon,
       title: "Library",
-      onClick: () => navigate(`/user/${user.id}`),
+      onClick: () => navigate(`/user/${userId}`),
     },
     {
       icon: storiesIcon,
       title: "Stories",
-      onClick: () => navigate(`/user/${user.id}`),
+      onClick: () => navigate(`/user/${userId}`),
     },
   ];
 
@@ -81,6 +95,7 @@ const AvatarMenu = () => {
           justifyContent: "space-between",
           padding: "0px 25px",
         }}
+        onClick={() => navigate(`/plans`)}
       >
         Become a Medium Member
         <span className="f ai-c">{starIcon}</span>
@@ -106,14 +121,16 @@ const AvatarMenu = () => {
             fontSize: "14px",
             marginBottom: "4px",
             marginTop: "2px",
+            cursor: "pointer",
           }}
+          onClick={() => logout()}
         >
           Sign out
         </p>
         <span
           style={{ color: "gray", fontSize: "13.75px", marginBottom: "-3px" }}
         >
-          Hello
+          {user?.email}
         </span>
       </div>
     </div>

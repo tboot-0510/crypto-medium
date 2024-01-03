@@ -18,11 +18,20 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+    authenticationToken: {
+      type: String,
+      required: true,
+    },
   },
   {
     statics: {
       findByEmail(email) {
         return this.find({ email: new RegExp(email, "i") });
+      },
+      findByRefreshToken(refreshToken) {
+        return this.find({
+          authenticationToken: new RegExp(refreshToken, "i"),
+        });
       },
     },
   }

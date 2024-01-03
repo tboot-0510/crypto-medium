@@ -1,40 +1,30 @@
 import React, { useEffect, useLayoutEffect, useMemo } from "react";
 import ReactDOM from "react-dom";
+import { useOverlayContext } from "../../context/OverlayProvider";
 
-import { useModalContext } from "../../context/ModalProvider";
+import styles from "./overlay.module.scss";
 import CallToAction from "../../reusable-elements/CallToAction/CallToAction";
-
-import styles from "./modal.module.scss";
 import { X } from "@phosphor-icons/react";
 
-const Modal = () => {
-  const { modalOpened, closeModal, modalProps } = useModalContext();
+const Overlay = () => {
+  const { overlayOpened, overlayProps, closeOverlay } = useOverlayContext();
 
-  const { contentElement } = modalProps;
+  const { contentElement } = overlayProps;
 
   const moutingPoint = useMemo(() => document.createElement("div"), []);
 
   useLayoutEffect(() => {
-    if (modalOpened) {
+    if (overlayOpened) {
       document.body.appendChild(moutingPoint);
       return () => {
         document.body.removeChild(moutingPoint);
       };
     }
-  }, [modalOpened, moutingPoint]);
-
-  // useEffect(() => {
-  //     if (modalOpened) {
-  //         deactivateScroll();
-  //         return () => {
-  //             activateScroll();
-  //         };
-  //     }
-  // }, [modalOpened]);
+  }, [overlayOpened, moutingPoint]);
 
   const onCloseModal = (e) => {
     if (e.key === "Escape") {
-      closeModal();
+      closeOverlay();
     }
   };
 
@@ -45,7 +35,7 @@ const Modal = () => {
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  if (!modalOpened) {
+  if (!overlayOpened) {
     return null;
   }
 
@@ -53,16 +43,12 @@ const Modal = () => {
     <>
       {ReactDOM.createPortal(
         <>
-          <div
-            className={styles["modal-blur-container"]}
-            onClick={closeModal}
-          />
-          <div id="MediumModal" className={styles["modal-container"]}>
+          <div className={styles["overlay"]}>
             <CallToAction
               type="tiny"
               message=""
               icon={<X size={18} color="black" />}
-              onClick={closeModal}
+              onClick={closeOverlay}
               additionalStyle={{
                 right: 12,
                 top: 12,
@@ -79,4 +65,4 @@ const Modal = () => {
   );
 };
 
-export default Modal;
+export default Overlay;

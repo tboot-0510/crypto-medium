@@ -62,7 +62,8 @@ const SignUpForm = ({ step, updateStep }) => {
     onProceed(signUpData)
       .then((response) => {
         localStorage.setItem("autenticated", true);
-        dispatch(loginUser(response.data));
+        dispatch(loginUser(response.data.user));
+        // sessionStorage.setItem("user", response.data.user._id);
 
         closeModal();
       })

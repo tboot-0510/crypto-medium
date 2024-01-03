@@ -2,10 +2,12 @@ import React from "react";
 import NavBar from "../components/navbar/NavBar";
 import TopBanner from "../components/banner/TopBanner";
 import SuggestionBar from "../components/suggestionBar/SuggestionBar";
-import Post from "../components/post/Post";
 import { useQuery } from "@tanstack/react-query";
 import { getTopicData } from "../api/mediumApi";
 import Suggestions from "../components/suggestions/Suggestions";
+import { getPostsApiHandler } from "../api/postApi";
+import RSSPost from "../components/post/RSSPost";
+import Post from "../components/post/Post";
 
 const Home = () => {
   const { data, isLoading } = useQuery({
@@ -13,7 +15,14 @@ const Home = () => {
     queryFn: () => getTopicData(),
   });
 
+  const { data: postData } = useQuery({
+    queryKey: ["getPostsApiHandler"],
+    queryFn: () => getPostsApiHandler(),
+  });
+
   const { feed, items, status } = data?.data || [];
+
+  console.log("postData", postData);
 
   console.log("data", feed, items, status, isLoading);
 
@@ -26,7 +35,12 @@ const Home = () => {
           <main style={{ minWidth: 728, maxWidth: 728 }}>
             <SuggestionBar />
             <div style={{ paddingTop: "50px" }}>
-              {items?.map((item, index) => (
+              {/* {items?.map((item, index) => (
+                <article key={index}>
+                  <RSSPost item={item} index={index} />
+                </article>
+              ))} */}
+              {postData?.data?.map((item, index) => (
                 <article key={index}>
                   <Post item={item} index={index} />
                 </article>

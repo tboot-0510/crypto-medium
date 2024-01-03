@@ -6,13 +6,14 @@ const postSchema = new Schema(
       type: String,
       required: true,
     },
-    body: {
+    markdown: {
       type: String,
       required: true,
     },
     userId: {
       type: Schema.Types.ObjectId,
       required: true,
+      ref: "users",
     },
     tags: [{ type: String, required: true }],
     votes: [{ type: Schema.Types.ObjectId, ref: "users" }],
@@ -25,6 +26,10 @@ const postSchema = new Schema(
     image: String,
     summary: String,
     savedBy: [{ type: Schema.Types.ObjectId, ref: "users" }],
+    membersOnly: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );

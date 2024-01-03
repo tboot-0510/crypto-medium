@@ -11,7 +11,7 @@ const NavBar = () => {
 
   return (
     <div className={styles.navbar}>
-      <div className="f-1 ai-c">
+      <div className="f-1 ai-c" onClick={() => navigate("/")}>
         <a>
           <img src={mediumLogo} className="logo react" alt="Medium logo" />
         </a>

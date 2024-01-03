@@ -6,11 +6,13 @@ import { useSelector } from "react-redux";
 import CallToAction from "../../reusable-elements/CallToAction/CallToAction";
 import { moreIcon, notificationIcon } from "../../assets/icons";
 import AvatarMenu from "../avatar/AvatarMenu";
+import { toUppercase } from "../../utils/format";
 
 const MetaBar = ({ disabled, onClick }) => {
   const { user } = useSelector((state) => ({
-    user: state.user.informations.id,
+    user: state.user.informations.name,
   }));
+
   return (
     <div className={styles.metabar}>
       <div className={styles["metabar-header"]}>
@@ -19,7 +21,9 @@ const MetaBar = ({ disabled, onClick }) => {
             <img src={mediumLogo} className="logo react" alt="Medium logo" />
           </a>
           <div className="f ai-c jc-c ml-12 ">
-            <span className={styles["metabar-span"]}>{`Draft in ${user}`}</span>
+            <span className={styles["metabar-span"]}>{`Draft in ${toUppercase(
+              user
+            )}`}</span>
             <span className={`${styles["metabar-text"]} ml-16`}>Saved</span>
           </div>
         </div>

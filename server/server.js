@@ -7,6 +7,7 @@ import { createServer } from "http";
 import { connect } from "mongoose";
 import postRouter from "./routes/post.js";
 import "dotenv/config";
+import cookieParser from "cookie-parser";
 
 const uri = process.env.MONGODB_URI;
 
@@ -16,6 +17,7 @@ const httpServer = createServer(app);
 
 app.use(cors(corsOptions));
 app.use(express.json());
+app.use(cookieParser());
 
 app.use(express.urlencoded({ extended: false }));
 

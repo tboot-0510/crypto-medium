@@ -3,20 +3,26 @@ import MetaBar from "../components/metabar/MetaBar";
 import TextareaAutosize from "react-textarea-autosize";
 
 import styles from "./write.module.scss";
-import { makePostApiHandler } from "../api/postApi";
+import { useOverlayContext } from "../context/OverlayProvider";
+import OverlayDialog from "../components/overlayDialog/overlayDialog";
 
 const INITIAL_POST_DATA = {
   title: "",
   markdown: "",
-  tags: "",
 };
 
 const Write = () => {
   const [post, setPost] = useState(INITIAL_POST_DATA);
 
+  const { openOverlay } = useOverlayContext();
+
   const makePost = () => {
-    makePostApiHandler(post);
+    openOverlay({
+      contentElement: <OverlayDialog post={post} />,
+    });
   };
+
+  console.log("post", post);
 
   return (
     <div className="f fd-c h-100-p" style={{ minHeight: "100vh" }}>

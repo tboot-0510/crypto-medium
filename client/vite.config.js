@@ -12,4 +12,7 @@ export default defineConfig({
     host: true,
     port: 8000,
   },
+  // optimizeDeps: {
+  //   exclude: ["qs"],
+  // },
 });

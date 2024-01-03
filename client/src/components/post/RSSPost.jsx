@@ -3,15 +3,17 @@ import styles from "./post.module.scss";
 import { formatDateTime, generateIcon, toUppercase } from "../../utils/format";
 import Badge from "../../reusable-elements/badge/Badge";
 import { moreIcon, mutePost, savePost } from "../../assets/icons";
-import { useNavigate } from "react-router-dom";
+import RSSIcon from "../../assets/rss.svg";
 
-const Post = ({ item, index }) => {
-  const navigate = useNavigate();
-  const showMoreText = (text) => {
-    if (text.length < 130) return text;
+const RSSPost = ({ item, index }) => {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(item.description, "text/html");
 
-    return text.slice(0, 130) + "...";
-  };
+  const imageLink = doc
+    .querySelector(".medium-feed-image img")
+    ?.getAttribute("src");
+  const snippetElement = doc.querySelector(".medium-feed-snippet")?.innerText;
+  const linkElement = doc.querySelector(".medium-feed-link a")?.href;
 
   return (
     <div className={`${styles.article} ${index !== 0 ? "pt-24" : ""}`}>
@@ -29,40 +31,40 @@ const Post = ({ item, index }) => {
                 }
           }
         >
-          <a className={styles.icon}>
+          <a className={styles.icon} href={linkElement}>
             {/* <img src={""} width="24" height="24" alt={item.author} /> */}
             {!item.icon && (
               <div className="f jc-c ai-c">
-                {toUppercase(generateIcon(item.userId.name))}
+                {toUppercase(generateIcon(item.author))}
               </div>
             )}
           </a>
         </div>
         <div className="f fw-w ai-c ml-8 w-100-p">
-          <span className={styles.author}>{item.userId?.name}</span>
-          <div className="f-1" style={{ flex: "0 0 auto" }}>
+          <span className={styles.author}>{item.author}</span>
+          <div className="f-1 mr-12" style={{ flex: "0 0 auto" }}>
             <p className="f fd-r ai-c jc-c">
               <span className="f jc-c ai-c" style={{ margin: "0px 4px" }}>
                 ·
               </span>
               <span className={styles.date}>
-                {formatDateTime(item.createdAt)}
+                {formatDateTime(item.pubDate)}
               </span>
             </p>
           </div>
+          <img src={RSSIcon} width="18" height="18" alt={"rss"} />
         </div>
       </div>
+
       <div className="f mt-12">
         <div className="f f-2 fd-c" style={{ wordBreak: "break-word" }}>
           <a
             className={styles["article-link"]}
             rel="noopener follow"
-            onClick={() => navigate(`/post/${item._id}`)}
+            href={item.link}
           >
             <h2 className={styles["article-title"]}>{item.title}</h2>
-            <p className={styles["article-description"]}>
-              {showMoreText(item.markdown)}
-            </p>
+            <p className={styles["article-description"]}>{snippetElement}</p>
           </a>
           <div className={styles["article-footer"]}>
             <div className="f f-3 ai-c">
@@ -81,13 +83,8 @@ const Post = ({ item, index }) => {
             rel="noopener follow"
             href={item.link}
           >
-            {item.image ? (
-              <img
-                src={item.image}
-                width="112"
-                height="112"
-                alt={item.userId.name}
-              />
+            {imageLink ? (
+              <img src={imageLink} width="112" height="112" alt={item.author} />
             ) : (
               <div style={{ width: "112px", height: "112px" }}>No Image</div>
             )}
@@ -99,4 +96,4 @@ const Post = ({ item, index }) => {
   );
 };
 
-export default Post;
+export default RSSPost;

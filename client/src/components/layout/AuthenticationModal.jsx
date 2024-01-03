@@ -2,10 +2,12 @@ import { useState } from "react";
 import CallToAction from "../../reusable-elements/CallToAction/CallToAction";
 import { loginApiHandler } from "../../api/loginApi";
 import GoogleIcon from "../../assets/google_icon.svg";
+import MetamaskIcon from "../../assets/metamask_icon.svg";
 
 import styles from "./authenticationModal.module.scss";
 import { Envelope } from "@phosphor-icons/react/dist/ssr";
 import SignUpForm from "../forms/SignUpForm";
+import { connectWithMetamask } from "../../utils/connectors/metamask";
 
 const AuthenticationModal = () => {
   const [step, updateStep] = useState({ id: 0, provenance: null });
@@ -21,12 +23,14 @@ const AuthenticationModal = () => {
       email: {
         text: "Sign up with email",
         onClick: () => updateStep({ id: 1, provenance: 0 }),
-        onProceed: () => console.log("sign up"),
+      },
+      crypto: {
+        text: "Sign up with Metamask",
+        onClick: () => connectWithMetamask(),
       },
       switch: {
         text: "Already have an account?",
         onClick: () => updateStep({ id: 2, provenance: 0 }),
-        additionalText: "Sign in",
       },
     },
     1: {
@@ -45,7 +49,10 @@ const AuthenticationModal = () => {
       email: {
         text: "Sign in with email",
         onClick: () => updateStep({ id: 1, provenance: 2 }),
-        onProceed: () => console.log("sign in"),
+      },
+      crypto: {
+        text: "Sign in with Metamask",
+        onClick: () => updateStep({ id: 1, provenance: 2 }),
       },
       switch: {
         text: "No account?",
@@ -89,6 +96,20 @@ const AuthenticationModal = () => {
               message={stepComponents[stepId].email.text}
               icon={<Envelope color="black" weight="regular" size={24} />}
               onClick={stepComponents[stepId].email.onClick}
+              addSpace
+              additionalStyle={{
+                width: "300px",
+                borderWidth: 1,
+                borderColor: "black",
+                backgroundColor: "white",
+                color: "black",
+              }}
+            />
+            <CallToAction
+              type="primary"
+              message={stepComponents[stepId].crypto.text}
+              icon={<img src={MetamaskIcon} width="24" height="24" />}
+              onClick={stepComponents[stepId].crypto.onClick}
               addSpace
               additionalStyle={{
                 width: "300px",

@@ -2,14 +2,14 @@ import jwt from "jsonwebtoken";
 import "dotenv/config";
 
 const isAuthenticated = (req, res, next) => {
-  const authHeader = req.headers.authorization || req.headers.Authorization;
-  if (!authHeader?.startsWith("Bearer ")) return res.sendStatus(401);
+  const { accessToken, jwt: jwtToken } = req.cookies;
+  if (!accessToken && !jwtToken) return res.sendStatus(401);
 
-  const token = authHeader.split(" ")[1];
+  if (!accessToken) return res.status(403).send({ message: "Token expired" });
 
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
-    if (err) return res.sendStatus(403);
-    req.user = decoded.userId; // passed from jwt
+  jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+    if (err) return res.status(403).send({ message: "Token expired" });
+    req.userId = decoded.userId;
     next();
   });
 };
