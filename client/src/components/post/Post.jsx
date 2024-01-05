@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./post.module.scss";
 import { formatDateTime, generateIcon, toUppercase } from "../../utils/format";
 import Badge from "../../reusable-elements/badge/Badge";
-import { moreIcon, mutePost, savePost } from "../../assets/icons";
+import { moreIcon, mutePost, savePost, starIcon } from "../../assets/icons";
 import { useNavigate } from "react-router-dom";
 
 const Post = ({ item, index }) => {
@@ -33,7 +33,7 @@ const Post = ({ item, index }) => {
             {/* <img src={""} width="24" height="24" alt={item.author} /> */}
             {!item.icon && (
               <div className="f jc-c ai-c">
-                {toUppercase(generateIcon(item.userId.name))}
+                {toUppercase(generateIcon(item.userId?.name))}
               </div>
             )}
           </a>
@@ -49,6 +49,14 @@ const Post = ({ item, index }) => {
                 {formatDateTime(item.createdAt)}
               </span>
             </p>
+            {item.membersOnly && (
+              <div className="f fd-r jc-c ml-8" style={{ fontSize: "14px" }}>
+                <div className="f ai-c mr-8">{starIcon}</div>
+                <p className="f fd-r ai-c">
+                  <span>Members only</span>
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>

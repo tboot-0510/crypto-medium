@@ -4,73 +4,78 @@ import {
   formatMessage,
   isChainUnsupported,
   requestSwitchChain,
+  stripErrorCodes,
   unsupportedPlugins,
+  verifyAccountAndNetwork,
 } from "./helpers";
-import { walletAuthMessageToSign } from "../../api/loginApi";
+import {
+  walletAuthMessageToSign,
+  walletConnectApiHandler,
+} from "../../api/loginApi";
+import { calculateMaticArticlePrice } from "../format";
+import { fetchTokenPrice } from "../../api/tokenApi";
+import { cryptoPaymentApiHandler } from "../../api/userApi";
 
-const connectWithMetamask = async () => {
-  const { ethereum } = window;
+const { ethereum } = window;
 
-  const provider = ethereum;
+const provider = ethereum;
 
-  const getSignature = async ({ from, msgParams }) => {
-    const signature = await provider.request({
-      method: "eth_signTypedData_v4",
-      params: [from, msgParams],
-    });
-    return signature;
-  };
+const getSignature = async ({ from, msgParams }) => {
+  const signature = await provider.request({
+    method: "eth_signTypedData_v4",
+    params: [from, msgParams],
+  });
+  return signature;
+};
 
-  const getProvider = () => {
-    if (!ethereum?.isMetaMask)
-      return "componentsWallet:external_wallet.metamask.metamask_plugin";
+const getProvider = () => {
+  if (!ethereum?.isMetaMask)
+    return "componentsWallet:external_wallet.metamask.metamask_plugin";
 
-    // eslint-disable-next-line no-underscore-dangle
-    if (ethereum.isBraveWallet && !ethereum._events && !ethereum._state) {
-      return "componentsWallet:external_wallet.wrong_plugin.brave";
-    }
-    const unsupportedPlugin = Object.keys(ethereum).find(
-      (key) => unsupportedPlugins[key]
-    );
-    if (unsupportedPlugin) return unsupportedPlugins[unsupportedPlugin];
-  };
+  // eslint-disable-next-line no-underscore-dangle
+  if (ethereum.isBraveWallet && !ethereum._events && !ethereum._state) {
+    return "componentsWallet:external_wallet.wrong_plugin.brave";
+  }
+  const unsupportedPlugin = Object.keys(ethereum).find(
+    (key) => unsupportedPlugins[key]
+  );
+  if (unsupportedPlugin) return unsupportedPlugins[unsupportedPlugin];
+};
 
-  const connect = async () => {
-    const errorGetReady = getProvider();
+const connect = async () => {
+  const errorGetReady = getProvider();
 
-    if (errorGetReady) {
-      toast.error(errorGetReady);
+  if (errorGetReady) {
+    toast.error(errorGetReady);
+    return;
+  }
+
+  let chainId = parseInt(await provider.request({ method: "eth_chainId" }), 16);
+
+  if (chainId && !BLOCKCHAINS_ACCEPTED.includes(chainId)) {
+    chainId = await requestSwitchChain(provider, BLOCKCHAINS_ACCEPTED[0]);
+    const errorMessage = isChainUnsupported(chainId);
+    if (errorMessage) {
+      toast.error(errorMessage);
       return;
     }
+  }
 
-    let chainId = parseInt(
-      await provider.request({ method: "eth_chainId" }),
-      16
-    );
+  await provider.request({
+    method: "wallet_requestPermissions",
+    params: [{ eth_accounts: {} }],
+  });
 
-    if (chainId && !BLOCKCHAINS_ACCEPTED.includes(chainId)) {
-      chainId = await requestSwitchChain(provider, BLOCKCHAINS_ACCEPTED[0]);
-      const errorMessage = isChainUnsupported(chainId);
-      if (errorMessage) {
-        toast.error(errorMessage);
-        return;
-      }
-    }
+  const accounts = await provider.request({
+    method: "eth_requestAccounts",
+  });
 
-    await provider.request({
-      method: "wallet_requestPermissions",
-      params: [{ eth_accounts: {} }],
-    });
+  const account = accounts[0];
 
-    const accounts = await provider.request({
-      method: "eth_requestAccounts",
-    });
+  return { account, chainId };
+};
 
-    const account = accounts[0];
-
-    return { account, chainId };
-  };
-
+const connectWithMetamask = async (type) => {
   try {
     const connectionInfo = await connect();
 
@@ -78,51 +83,111 @@ const connectWithMetamask = async () => {
       const { account, chainId } = connectionInfo;
       try {
         const { message } = (
-          await walletAuthMessageToSign({ account, chain_id: chainId })
+          await walletAuthMessageToSign({
+            account,
+            chain_id: chainId,
+          })
         ).data;
         const msgParams = formatMessage(chainId, message);
         const signature = await getSignature({ from: account, msgParams });
+
+        return await walletConnectApiHandler({
+          signatureParams: msgParams,
+          signature,
+          type,
+        });
       } catch (error) {
+        console.log("error", error);
         toast.error(error.message);
+        return error;
       }
     }
-  } catch (e) {
-    toast.error(e.message);
+  } catch (err) {
+    toast.error(err.message);
   }
 };
 
-// const sendWalletSignature = async ({ chainId, account, walletMeta, signingMethod, loginApi }) => {
-//     const { message } = (await walletAuthMessageToSign({ account, chain_id: chainId })).data;
-//     try {
-//         const msgParams = formatMessage(chainId, message);
+const checkBalance = async (account) => {
+  const balance = await ethereum.request({
+    method: "eth_getBalance",
+    params: [account, "latest"],
+  });
+  console.log("balance", balance);
+};
 
-//         const signature = await signingMethod({ from: account, msgParams });
+const startCryptoPayment = async (articlePrice, account, closeModal) => {
+  try {
+    const errorNetwork = await verifyAccountAndNetwork(ethereum, account);
 
-//         await loginApi({
-//             signature_params: msgParams,
-//             signature,
-//             wallet_meta: walletMeta,
-//         });
+    if (errorNetwork) {
+      toast.error(errorNetwork);
+      closeModal();
+      return;
+    }
 
-//         meApi().then((meResp) => {
-//             localStorage.setItem('authenticated', true);
-//             dispatch(loginUser(meResp?.data));
-//             if (meResp?.data?.missing_attributes?.length > 0) {
-//                 updateStep(REDIRECT_CONNECTION_MODAL_USER_INFO);
-//             } else {
-//                 closeModal();
-//                 toast.success(t('toast.logged_in'), {
-//                     toastId: 'toast.logged_in',
-//                 });
-//             }
-//         });
-//     } catch (error) {
-//         if (localStorage.getItem('walletconnect')) {
-//             localStorage.removeItem('walletconnect');
-//         }
-//         setIsSigningWallet(false);
-//         toast.error(t(stripErrorCodes(error)));
-//     }
-// };
+    const cryptoPrice = await fetchTokenPrice();
 
-export { connectWithMetamask };
+    if (!cryptoPrice.data.price) {
+      toast.error("Failed to fetch MATIC price");
+      return;
+    }
+
+    ethereum
+      .request({
+        method: "eth_sendTransaction",
+        params: [
+          {
+            from: account,
+            value: Number(
+              calculateMaticArticlePrice(articlePrice, cryptoPrice.data.price)
+            ).toString(16),
+            gas: Number(21000).toString(16),
+            to: "0x54639a506d5C0BF68e765775fb895c0d4413B5De",
+          },
+        ],
+      })
+      .then(async (txHash) => {
+        console.log("txHash", txHash);
+        const response = await cryptoPaymentApiHandler(txHash);
+        console.log("response", response);
+        // setIsProcessing(false);
+        //   const interval = setInterval(() => {
+        //     transferStatusApi(resp.data.id).then((result) => {
+        //         if (result.data.state === 'minted') {
+        //             clearInterval(interval);
+        //             reloadNft();
+        //             closeModal();
+        //             dispatch(
+        //                 updatePendingTransaction({
+        //                     transaction_id: '',
+        //                     nft_id: '',
+        //                 }),
+        //             );
+
+        //             queryClient.refetchQueries(['loadMyNfts', walletAddress]);
+        //         }
+        //         if (result.data.state === 'mint_failed') {
+        //             clearInterval(interval);
+        //             setIsProcessing(false);
+        //             closeModal();
+        //             dispatch(
+        //                 updatePendingTransaction({
+        //                     transaction_id: '',
+        //                     nft_id: '',
+        //                 }),
+        //             );
+        //             toast.error(t('pagesNftDetails:transfer_failed'));
+        //         }
+        //     });
+        // }, 2000);
+      })
+      .catch((error) => {
+        // setIsProcessing(false);
+        toast.error(stripErrorCodes(error));
+      });
+  } catch (error) {
+    toast.error(error.message);
+  }
+};
+
+export { connectWithMetamask, startCryptoPayment };

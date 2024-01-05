@@ -33,3 +33,25 @@ export const splitString = (string) => {
     .map((str) => str.trim())
     .filter((str) => str);
 };
+
+export const formatString = (string) => {
+  if (!string) return;
+
+  return (
+    string.slice(0, 10) +
+    "..." +
+    string.slice(string.length - 10, string.length)
+  );
+};
+
+const convertToGwei = (unit) => unit * 10 ** 18;
+
+export const calculateMaticArticlePrice = (articlePrice, euroPrice) => {
+  let euro2matic;
+  try {
+    euro2matic = 1 / euroPrice;
+  } catch (err) {
+    euro2matic = 1;
+  }
+  return convertToGwei(euro2matic * articlePrice);
+};

@@ -10,6 +10,8 @@ import NavBar from "../components/navbar/NavBar";
 import { useSelector } from "react-redux";
 import { toUppercase } from "../utils/format";
 import CallToAction from "../reusable-elements/CallToAction/CallToAction";
+import { useModalContext } from "../context/ModalProvider";
+import UnlockPostModal from "../components/layout/UnlockPostModal";
 
 const Post = () => {
   const { id } = useParams();
@@ -18,14 +20,20 @@ const Post = () => {
     userName: state.user.informations.name,
   }));
 
+  const { openModal } = useModalContext();
+
   const { data } = useQuery({
     queryKey: ["getPostIdApiHandler", id],
     queryFn: ({ queryKey }) => getPostIdApiHandler(queryKey[1]),
   });
 
-  console.log("post", data, id);
-
   const { title, markdown, createdAt, userId, membersOnly } = data?.data || [];
+
+  const unlockPost = () => {
+    openModal({
+      contentElement: <UnlockPostModal />,
+    });
+  };
 
   return (
     <>
@@ -77,7 +85,7 @@ const Post = () => {
                     }}
                   />
                   <CallToAction
-                    // onClick={publishPost}
+                    onClick={unlockPost}
                     type="primary"
                     message="Unlock now"
                     additionalStyle={{

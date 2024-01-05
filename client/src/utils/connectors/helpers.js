@@ -52,7 +52,7 @@ const formatMessage = (
       ],
       Message: [
         { name: "description", type: "string" },
-        // { name: "state", type: "string" },
+        { name: "state", type: "string" },
       ],
     },
   });
@@ -157,7 +157,10 @@ const verifyAccountAndNetwork = async (ethereum, walletAddress) => {
   if (!userAccounts.length)
     return "componentsWallet:external_wallet.transaction_error.no_account_found";
 
-  if (userAccounts[0].toLowerCase() !== walletAddress.toLowerCase()) {
+  if (
+    !walletAddress ||
+    userAccounts[0].toLowerCase() !== walletAddress.toLowerCase()
+  ) {
     return "componentsWallet:external_wallet.transaction_error.not_connected";
   }
 

@@ -8,9 +8,41 @@ import styles from "./authenticationModal.module.scss";
 import { Envelope } from "@phosphor-icons/react/dist/ssr";
 import SignUpForm from "../forms/SignUpForm";
 import { connectWithMetamask } from "../../utils/connectors/metamask";
+import { useDispatch } from "react-redux";
+import {
+  loginUser,
+  updateExternalWalletAddress,
+} from "../../store/slices/userSlice";
+import { SIGNIN, SIGNUP } from "../../utils/constants";
+import { useModalContext } from "../../context/ModalProvider";
 
 const AuthenticationModal = () => {
   const [step, updateStep] = useState({ id: 0, provenance: null });
+  const dispatch = useDispatch();
+  const { closeModal } = useModalContext();
+
+  const metaMaskConnection = (actionType) => {
+    connectWithMetamask(actionType)
+      .then((resp) => {
+        if (resp?.data) {
+          if (actionType === SIGNUP) {
+            dispatch(
+              updateExternalWalletAddress({ account: resp?.data.user.username })
+            );
+            updateStep({ id: 3, provenance: 1 });
+            return;
+          }
+          if (actionType === SIGNIN) {
+            dispatch(loginUser(resp.data.user));
+            closeModal();
+            return;
+          }
+        }
+      })
+      .catch((e) => {
+        console.log("error", e);
+      });
+  };
 
   const stepComponents = {
     0: {
@@ -26,17 +58,17 @@ const AuthenticationModal = () => {
       },
       crypto: {
         text: "Sign up with Metamask",
-        onClick: () => connectWithMetamask(),
+        onClick: () => metaMaskConnection(SIGNUP),
       },
       switch: {
         text: "Already have an account?",
         onClick: () => updateStep({ id: 2, provenance: 0 }),
+        additionalText: "Sign in",
       },
     },
     1: {
       title: "Sign up with email",
       terms_keyword: "Sign up",
-      subtitle: "Enter your email address to create an account.",
       element: <SignUpForm step={step} updateStep={updateStep} />,
     },
     2: {
@@ -52,13 +84,18 @@ const AuthenticationModal = () => {
       },
       crypto: {
         text: "Sign in with Metamask",
-        onClick: () => updateStep({ id: 1, provenance: 2 }),
+        onClick: () => metaMaskConnection(SIGNIN),
       },
       switch: {
         text: "No account?",
         onClick: () => updateStep({ id: 0, provenance: 2 }),
         additionalText: "Create one",
       },
+    },
+    3: {
+      title: "Sign up with your name",
+      terms_keyword: "Sign up",
+      element: <SignUpForm step={step} updateStep={updateStep} />,
     },
   };
 
@@ -135,11 +172,12 @@ const AuthenticationModal = () => {
             </div>
           </div>
         )}
-        {stepId === 1 && (
-          <div className="f fd-c ai-c mt-48 g-12">
-            {stepComponents[stepId]?.element}
-          </div>
-        )}
+        {stepId === 1 ||
+          (stepId === 3 && (
+            <div className="f fd-c ai-c mt-48 g-12">
+              {stepComponents[stepId]?.element}
+            </div>
+          ))}
       </div>
     </div>
   );

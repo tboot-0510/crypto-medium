@@ -13,6 +13,9 @@ const signUpApiHandler = (userInfo) =>
     user: userInfo,
   });
 
+const signUpWeb3ApiHandler = (userInfo) =>
+  axios.post("auth/signup_web3", { user: userInfo });
+
 const refetchTokenApiHandler = () => axios.get("auth/refresh");
 
 const walletAuthMessageToSign = (params) =>
@@ -22,13 +25,20 @@ const walletAuthMessageToSign = (params) =>
       qs.stringify(p, { encode: false, arrayFormat: "brackets" }),
   });
 
+const walletConnectApiHandler = (params) =>
+  axios.get("auth/wallet_callback", {
+    params,
+  });
+
 const meApi = () => axios.get("auth/me");
 
 export {
   loginApiHandler,
   logoutApiHandler,
   signUpApiHandler,
+  signUpWeb3ApiHandler,
   refetchTokenApiHandler,
   meApi,
   walletAuthMessageToSign,
+  walletConnectApiHandler,
 };

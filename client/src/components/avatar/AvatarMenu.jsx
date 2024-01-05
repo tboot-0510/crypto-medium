@@ -12,6 +12,8 @@ import {
 } from "../../assets/icons";
 import { logoutUser } from "../../store/slices/userSlice";
 import { logoutApiHandler } from "../../api/loginApi";
+import Jazzicon from "react-jazzicon";
+import { formatString } from "../../utils/format";
 
 const AvatarMenu = () => {
   const { user } = useSelector((state) => ({
@@ -46,6 +48,9 @@ const AvatarMenu = () => {
   };
 
   const userId = user?.id;
+  const externalWalletAccount = user?.externalWalletAccount;
+
+  console.log("user", user);
 
   const dropdownOptions = [
     {
@@ -130,7 +135,7 @@ const AvatarMenu = () => {
         <span
           style={{ color: "gray", fontSize: "13.75px", marginBottom: "-3px" }}
         >
-          {user?.email}
+          {user?.email || formatString(user?.externalWalletAccount)}
         </span>
       </div>
     </div>
@@ -139,16 +144,24 @@ const AvatarMenu = () => {
   return (
     <div className={styles.avatar}>
       <button onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
-        <img
-          style={{
-            width: "32px",
-            borderRadius: "50%",
-            border: "1px solid #d9d9d9",
-            cursor: "pointer",
-          }}
-          src={GoogleIcon}
-          alt=""
-        />
+        {!externalWalletAccount && (
+          <img
+            style={{
+              width: "32px",
+              borderRadius: "50%",
+              border: "1px solid #d9d9d9",
+              cursor: "pointer",
+            }}
+            src={GoogleIcon}
+            alt=""
+          />
+        )}
+        {externalWalletAccount && (
+          <Jazzicon
+            diameter={35}
+            seed={parseInt(externalWalletAccount.slice(2, 10), 16)}
+          />
+        )}
       </button>
       {isDropdownOpen &&
         createPortal(

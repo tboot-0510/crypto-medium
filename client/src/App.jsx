@@ -8,22 +8,21 @@ import Write from "./pages/Write";
 import Overlay from "./components/overlay/Overlay";
 import Post from "./pages/Post";
 import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
     <>
       <ToastContainer
         position="top-right"
-        theme="colored"
         autoClose={5000}
-        hideProgressBar={true}
+        hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
         rtl={false}
+        style={{ zIndex: 100001 }}
         pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        style={{ fontWeight: 500 }}
+        theme="light"
       />
       <Routes>
         <Route path="/post/:id" element={<Post />} />

@@ -3,11 +3,14 @@ import cors from "cors";
 import corsOptions from "./config/corsOptions.js";
 import authRouter from "./routes/auth.js";
 import feedRouter from "./routes/feed.js";
+import tokenRouter from "./routes/token.js";
 import { createServer } from "http";
 import { connect } from "mongoose";
 import postRouter from "./routes/post.js";
 import "dotenv/config";
 import cookieParser from "cookie-parser";
+import { coinmarketcapService } from "./services/coinmarketcap.js";
+import userRouter from "./routes/user.js";
 
 const uri = process.env.MONGODB_URI;
 
@@ -35,3 +38,5 @@ connect(uri)
 app.use("/auth", authRouter);
 app.use("/feed", feedRouter);
 app.use("/post", postRouter);
+app.use("/token", tokenRouter);
+app.use("/user", userRouter);

@@ -9,8 +9,10 @@ const AuthenticatedRoute = ({ children, fallback }) => {
   const [checking, setChecking] = useState(false);
 
   const { user } = useSelector((state) => ({
-    user: state.user.informations.email,
+    user: state.user.informations.name,
   }));
+
+  console.log("AuthenticatedRoute", user);
 
   const checkAuthentication = () => {
     setChecking(true);

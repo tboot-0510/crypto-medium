@@ -3,10 +3,13 @@ import { validateEmail } from "../../utils/validations";
 import CallToAction from "../../reusable-elements/CallToAction/CallToAction";
 import { CaretLeft } from "@phosphor-icons/react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 
 import styles from "./forms.module.scss";
-import { loginApiHandler, signUpApiHandler } from "../../api/loginApi";
+import {
+  loginApiHandler,
+  signUpApiHandler,
+  signUpWeb3ApiHandler,
+} from "../../api/loginApi";
 import { loginUser } from "../../store/slices/userSlice";
 import { useModalContext } from "../../context/ModalProvider";
 
@@ -25,6 +28,10 @@ const SignUpForm = ({ step, updateStep }) => {
   const dispatch = useDispatch();
   const { closeModal } = useModalContext();
 
+  const { account } = useSelector((state) => ({
+    account: state.user.informations.externalWalletAccount,
+  }));
+
   const relatedStep = {
     0: {
       text: "Enter your email address to create an account.",
@@ -34,6 +41,15 @@ const SignUpForm = ({ step, updateStep }) => {
         { type: "text", name: "username", text: "Username" },
         { type: "text", name: "email", text: "Email" },
         { type: "password", name: "password", text: "Password" },
+      ],
+      backText: "All sign up options",
+    },
+    1: {
+      text: "Enter your name and username to create an account.",
+      onProceed: (props) => signUpWeb3ApiHandler({ ...props, account }),
+      inputFields: [
+        { type: "text", name: "name", text: "Name" },
+        { type: "text", name: "username", text: "Username" },
       ],
       backText: "All sign up options",
     },
@@ -53,8 +69,10 @@ const SignUpForm = ({ step, updateStep }) => {
     setSignUpData({ ...signUpData, ...formInputData });
   };
 
+  const web3provenance = step.id === 3;
+
   const proceedStep = () => {
-    if (!validateEmail(signUpData.email)) {
+    if (!web3provenance && !validateEmail(signUpData.email)) {
       setEmailError("Invalid email");
       return;
     }
@@ -63,7 +81,6 @@ const SignUpForm = ({ step, updateStep }) => {
       .then((response) => {
         localStorage.setItem("autenticated", true);
         dispatch(loginUser(response.data.user));
-        // sessionStorage.setItem("user", response.data.user._id);
 
         closeModal();
       })

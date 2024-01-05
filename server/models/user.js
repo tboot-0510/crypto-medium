@@ -4,7 +4,9 @@ const userSchema = new Schema(
   {
     email: {
       type: String,
-      required: true,
+      required: function () {
+        return !this.walletAccount;
+      },
     },
     name: {
       type: String,
@@ -16,17 +18,28 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
-      required: true,
+      required: function () {
+        return !this.walletAccount;
+      },
     },
     authenticationToken: {
       type: String,
-      required: true,
+      required: function () {
+        return !this.walletAccount;
+      },
+    },
+    walletAccount: {
+      type: Schema.Types.ObjectId,
+      ref: "wallet",
     },
   },
   {
     statics: {
       findByEmail(email) {
         return this.find({ email: new RegExp(email, "i") });
+      },
+      findByWalletAccount(account) {
+        return this.find({ walletAccount: account });
       },
       findByRefreshToken(refreshToken) {
         return this.find({
