@@ -11,6 +11,7 @@ import "dotenv/config";
 import cookieParser from "cookie-parser";
 import { coinmarketcapService } from "./services/coinmarketcap.js";
 import userRouter from "./routes/user.js";
+import transactionRouter from "./routes/transaction.js";
 
 const uri = process.env.MONGODB_URI;
 
@@ -40,3 +41,4 @@ app.use("/feed", feedRouter);
 app.use("/post", postRouter);
 app.use("/token", tokenRouter);
 app.use("/user", userRouter);
+app.use("/transaction", transactionRouter);

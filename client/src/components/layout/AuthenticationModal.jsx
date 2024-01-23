@@ -24,6 +24,7 @@ const AuthenticationModal = () => {
   const metaMaskConnection = (actionType) => {
     connectWithMetamask(actionType)
       .then((resp) => {
+        console.log("resp?.data", resp);
         if (resp?.data) {
           if (actionType === SIGNUP) {
             dispatch(

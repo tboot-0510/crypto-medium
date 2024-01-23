@@ -15,6 +15,7 @@ import {
 import { calculateMaticArticlePrice } from "../format";
 import { fetchTokenPrice } from "../../api/tokenApi";
 import { cryptoPaymentApiHandler } from "../../api/userApi";
+import { transactionStatusApi } from "../../api/transactionApi";
 
 const { ethereum } = window;
 
@@ -112,7 +113,7 @@ const checkBalance = async (account) => {
     method: "eth_getBalance",
     params: [account, "latest"],
   });
-  console.log("balance", balance);
+  return balance;
 };
 
 const startCryptoPayment = async (articlePrice, account, closeModal) => {
@@ -127,10 +128,17 @@ const startCryptoPayment = async (articlePrice, account, closeModal) => {
 
     const cryptoPrice = await fetchTokenPrice();
 
-    if (!cryptoPrice.data.price) {
+    if (!cryptoPrice?.data.price) {
       toast.error("Failed to fetch MATIC price");
       return;
     }
+
+    const articleCryptoPrice = Number(
+      calculateMaticArticlePrice(articlePrice, cryptoPrice.data.price)
+    ).toString(16);
+
+    const accountBalance = await checkBalance(account);
+    console.log("accountBalance", accountBalance, articleCryptoPrice);
 
     ethereum
       .request({
@@ -148,38 +156,39 @@ const startCryptoPayment = async (articlePrice, account, closeModal) => {
       })
       .then(async (txHash) => {
         console.log("txHash", txHash);
-        const response = await cryptoPaymentApiHandler(txHash);
-        console.log("response", response);
+        const resp = await cryptoPaymentApiHandler(txHash);
+        console.log("response", resp);
         // setIsProcessing(false);
-        //   const interval = setInterval(() => {
-        //     transferStatusApi(resp.data.id).then((result) => {
-        //         if (result.data.state === 'minted') {
-        //             clearInterval(interval);
-        //             reloadNft();
-        //             closeModal();
-        //             dispatch(
-        //                 updatePendingTransaction({
-        //                     transaction_id: '',
-        //                     nft_id: '',
-        //                 }),
-        //             );
+        const interval = setInterval(() => {
+          transactionStatusApi(resp.data.id).then((result) => {
+            console.log("result", result);
+            if (result.data.state === 1) {
+              clearInterval(interval);
+              // reloadPage();
+              closeModal();
+              // dispatch(
+              //   updatePendingTransaction({
+              //     transaction_id: "",
+              //     nft_id: "",
+              //   })
+              // );
 
-        //             queryClient.refetchQueries(['loadMyNfts', walletAddress]);
-        //         }
-        //         if (result.data.state === 'mint_failed') {
-        //             clearInterval(interval);
-        //             setIsProcessing(false);
-        //             closeModal();
-        //             dispatch(
-        //                 updatePendingTransaction({
-        //                     transaction_id: '',
-        //                     nft_id: '',
-        //                 }),
-        //             );
-        //             toast.error(t('pagesNftDetails:transfer_failed'));
-        //         }
-        //     });
-        // }, 2000);
+              // queryClient.refetchQueries(["loadMyNfts", walletAddress]);
+            }
+            if (result.data.state === 0) {
+              clearInterval(interval);
+              // setIsProcessing(false);
+              closeModal();
+              // dispatch(
+              //   updatePendingTransaction({
+              //     transaction_id: "",
+              //     nft_id: "",
+              //   })
+              // );
+              toast.error("Payment failed");
+            }
+          });
+        }, 2000);
       })
       .catch((error) => {
         // setIsProcessing(false);

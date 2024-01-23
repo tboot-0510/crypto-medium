@@ -9,7 +9,7 @@ import {
   handleSignUpWeb3,
   handleMetamaskSignUp,
   handleMetamaskSignIn,
-} from "../controllers/authController.js";
+} from "../controllers/authentication/authController.js";
 import isAuthenticated from "../middelware/authentication.js";
 import { processWithError } from "../middelware/process_with_error.js";
 
@@ -24,10 +24,10 @@ authRouter.get("/me", isAuthenticated, processWithError(handleMeApi));
 authRouter.get("/start_sign_in_web3", processWithError(getMessageToSign));
 authRouter.get(
   "/wallet_callback",
-  processWithError(async (req) => {
+  processWithError(async (req, res) => {
     const { signatureParams, signature, type } = req.query;
     if (type === "signin")
-      return await handleMetamaskSignIn(signatureParams, signature);
+      return await handleMetamaskSignIn(signatureParams, signature, res);
     if (type === "signup")
       return await handleMetamaskSignUp(signatureParams, signature);
     throw new Error(`Unhandled wallet_callback type ${type}`);

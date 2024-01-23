@@ -5,7 +5,7 @@ export const errorWithStatusCode = (status, error, params) => {
       message: error,
       params: params,
       details: {
-        body: JSON.stringify(error).replace(/["']/g, ""),
+        body: JSON.stringify(error)?.replace(/["']/g, ""),
       },
     },
   };

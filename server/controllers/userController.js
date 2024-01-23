@@ -1,7 +1,9 @@
+import { StatusEnum } from "../../client/src/utils/constants.js";
 import blockchainListenerQueue from "../jobs/queue/blockchain_listener_queue.js";
 import { errorWithStatusCode } from "../middelware/error_handler.js";
+import CryptoPayment from "../models/crypto_payment.js";
 
-const handleCryptoPayment = (req) => {
+const handleCryptoPayment = async (req) => {
   try {
     const { txHash } = req.body;
 
@@ -10,15 +12,26 @@ const handleCryptoPayment = (req) => {
         message: "Transaction hash is not present",
       });
 
+    console.log("req.userId", req.userId);
+    console.log("req.userId", req.body);
+
+    const cryptoPayment = new CryptoPayment({
+      user: req.userId,
+      hash: txHash,
+      status: StatusEnum.pending,
+    });
+
+    await cryptoPayment.save();
+
     blockchainListenerQueue.add(
-      { txHash: txHash, chainId: 80001 },
+      { txHash: txHash, chainId: 80001, cryptoPaymentId: cryptoPayment._id },
       {
-        attempts: 30,
+        attempts: 3,
         backoff: 2000,
       }
     );
 
-    return { message: "Transaction is being processed" };
+    return { id: cryptoPayment._id };
   } catch (err) {
     console.log("[ERROR] err", err);
     throw errorWithStatusCode(500, { message: err.message });

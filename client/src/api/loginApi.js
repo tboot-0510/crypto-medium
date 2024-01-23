@@ -25,10 +25,11 @@ const walletAuthMessageToSign = (params) =>
       qs.stringify(p, { encode: false, arrayFormat: "brackets" }),
   });
 
-const walletConnectApiHandler = (params) =>
-  axios.get("auth/wallet_callback", {
+const walletConnectApiHandler = (params) => {
+  return axios.get("auth/wallet_callback", {
     params,
   });
+};
 
 const meApi = () => axios.get("auth/me");
 
