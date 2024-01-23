@@ -24,7 +24,7 @@ const UnlockPostModal = () => {
       },
       crypto: {
         text: "Using your crypto balance",
-        onClick: () => startCryptoPayment(0.01, account, closeModal()),
+        onClick: () => startCryptoPayment(0.01, account, closeModal),
       },
     },
   };

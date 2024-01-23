@@ -12,9 +12,9 @@ const cryptoPaymentSchema = new Schema(
       required: true,
     },
     status: {
-      type: Number,
+      type: String,
       required: true,
-      enum: [0, 1],
+      enum: ["pending", "minted", "mint_failed"],
     },
     transaction: {
       type: Schema.Types.ObjectId,

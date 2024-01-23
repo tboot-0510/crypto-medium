@@ -3,23 +3,24 @@ import CryptoPayment from "../models/crypto_payment.js";
 
 const getTransactionStatus = async (req) => {
   try {
-    const { transactionId } = req.params;
+    const { id } = req.params;
+    console.log(req.params);
 
-    console.log("transactionId", transactionId, req.userId);
+    console.log("transactionId", id, req.userId);
 
     const cryptoPayment = await CryptoPayment.find({
-      _id: transactionId,
+      _id: id,
       user: req.userId,
     });
 
     console.log("crypto", cryptoPayment);
 
-    if (!cryptoPayment)
+    if (cryptoPayment.length === 0)
       throw errorWithStatusCode(400, {
-        message: "Transaction id is not found ${}",
+        message: `Transaction id is not found ${id}`,
       });
 
-    return { transaction: cryptoPayment };
+    return cryptoPayment[0];
   } catch (err) {
     console.log("[ERROR] err", err);
     throw errorWithStatusCode(500, { message: err.message });

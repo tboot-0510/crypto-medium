@@ -18,4 +18,6 @@ const getTransactionReceipt = async (txHash, chainId) => {
   };
 };
 
-export { getTransactionByHash, getTransactionReceipt };
+const getProvider = (chainId) => getAlchemyProvider(chainId);
+
+export { getTransactionByHash, getTransactionReceipt, getProvider };

@@ -162,7 +162,7 @@ const startCryptoPayment = async (articlePrice, account, closeModal) => {
         const interval = setInterval(() => {
           transactionStatusApi(resp.data.id).then((result) => {
             console.log("result", result);
-            if (result.data.state === 1) {
+            if (result.data.status === "minted") {
               clearInterval(interval);
               // reloadPage();
               closeModal();
@@ -175,7 +175,7 @@ const startCryptoPayment = async (articlePrice, account, closeModal) => {
 
               // queryClient.refetchQueries(["loadMyNfts", walletAddress]);
             }
-            if (result.data.state === 0) {
+            if (result.data.status === "mint_failed") {
               clearInterval(interval);
               // setIsProcessing(false);
               closeModal();

@@ -26,8 +26,11 @@ const handleCryptoPayment = async (req) => {
     blockchainListenerQueue.add(
       { txHash: txHash, chainId: 80001, cryptoPaymentId: cryptoPayment._id },
       {
-        attempts: 3,
-        backoff: 2000,
+        attempts: 20,
+        backoff: {
+          type: "fixed",
+          delay: 2000,
+        },
       }
     );
 
