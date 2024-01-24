@@ -8,8 +8,9 @@ import blockchainListenerQueue from "./queue/blockchain_listener_queue.js";
 import "dotenv/config";
 import { connect } from "mongoose";
 
-const uri = process.env.MONGODB_URI;
 // node blockchain_listener_job.js
+
+const uri = process.env.MONGODB_URI;
 console.log("[JOB] running");
 
 connect(uri)
@@ -25,8 +26,7 @@ blockchainListenerQueue.process(async (job, done) => {
     const response = await getTransactionReceipt(txHash, chainId);
 
     console.log("[TRANSACRION]", response);
-    if (!response || isEmpty(response)) return;
-    console.log("GOT [TRANSACRION]", response);
+    if (!response || isEmpty(response)) return done(new Error("No response"));
 
     const {
       from,
@@ -52,16 +52,13 @@ blockchainListenerQueue.process(async (job, done) => {
 
     await transaction.save();
 
-    console.log("transaction saved", transaction._id);
-
     const cryptoPayment = await CryptoPayment.findById(cryptoPaymentId);
 
-    console.log("cryptoPayment", cryptoPayment);
     if (!cryptoPayment) {
       const error = new Error(
         `No CryptoPayment found for ID: ${cryptoPaymentId}, Transaction ID ${transaction._id}`
       );
-      return done(error);
+      done(error);
     }
 
     cryptoPayment.transaction = transaction._id;
@@ -69,21 +66,9 @@ blockchainListenerQueue.process(async (job, done) => {
 
     await cryptoPayment.save();
 
-    return done(null, response);
+    done();
   } catch (err) {
     console.error("Error processing transaction:", err);
-    done(err);
+    done(new Error(err));
   }
-});
-
-blockchainListenerQueue.on("progress", function (job, progress) {
-  console.log(`${jod.id} is in progress`);
-});
-
-blockchainListenerQueue.on("waiting", function (job, progress) {
-  console.log(`${jod.id} is waiting`);
-});
-
-blockchainListenerQueue.on("completed", function (job, progress) {
-  console.log(`${jod.id} is completed`);
 });

@@ -1,3 +1,6 @@
+import { truncateMarkdown } from "../helpers/fomat_string.js";
+import { errorWithStatusCode } from "../middelware/error_handler.js";
+import cryptoPayment from "../models/crypto_payment.js";
 import Post from "../models/post.js";
 
 const writePost = async (req, res) => {
@@ -19,17 +22,46 @@ const writePost = async (req, res) => {
   }
 };
 
-const getPost = async (req, res) => {
+const getPost = async (req) => {
   try {
     const post = await Post.findById(req.params.id);
     if (!post) {
-      res.status(404).send({ message: `No post with id: ${req.params.id}` });
-      return;
+      throw errorWithStatusCode(404, {
+        message: `No post with id: ${req.params.id}`,
+      });
     }
-    res.status(200).send(post);
+
+    if (!post.membersOnly)
+      return {
+        post: {
+          ...post._doc,
+          isLocked: false,
+        },
+      };
+
+    const payment = await cryptoPayment.findOne({ post: req.params.id });
+
+    if (payment) {
+      return {
+        post: {
+          ...post._doc,
+          isLocked: false,
+        },
+      };
+    }
+
+    const { markdown } = post;
+
+    return {
+      post: {
+        ...post._doc,
+        markdown: truncateMarkdown(markdown),
+        isLocked: true,
+      },
+    };
   } catch (err) {
     console.log("[ERROR]", err);
-    res.status(500).json({ message: err.message });
+    throw errorWithStatusCode(500, { message: err.message });
   }
 };
 

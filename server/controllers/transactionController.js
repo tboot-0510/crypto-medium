@@ -4,16 +4,11 @@ import CryptoPayment from "../models/crypto_payment.js";
 const getTransactionStatus = async (req) => {
   try {
     const { id } = req.params;
-    console.log(req.params);
-
-    console.log("transactionId", id, req.userId);
 
     const cryptoPayment = await CryptoPayment.find({
       _id: id,
       user: req.userId,
     });
-
-    console.log("crypto", cryptoPayment);
 
     if (cryptoPayment.length === 0)
       throw errorWithStatusCode(400, {

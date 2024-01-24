@@ -4,7 +4,6 @@ import {
   formatMessage,
   isChainUnsupported,
   requestSwitchChain,
-  stripErrorCodes,
   unsupportedPlugins,
   verifyAccountAndNetwork,
 } from "./helpers";
@@ -12,10 +11,7 @@ import {
   walletAuthMessageToSign,
   walletConnectApiHandler,
 } from "../../api/loginApi";
-import { calculateMaticArticlePrice } from "../format";
 import { fetchTokenPrice } from "../../api/tokenApi";
-import { cryptoPaymentApiHandler } from "../../api/userApi";
-import { transactionStatusApi } from "../../api/transactionApi";
 
 const { ethereum } = window;
 
@@ -116,87 +112,16 @@ const checkBalance = async (account) => {
   return balance;
 };
 
-const startCryptoPayment = async (articlePrice, account, closeModal) => {
-  try {
-    const errorNetwork = await verifyAccountAndNetwork(ethereum, account);
+const getTokenPrice = async (account, callback) => {
+  const errorNetwork = await verifyAccountAndNetwork(ethereum, account);
 
-    if (errorNetwork) {
-      toast.error(errorNetwork);
-      closeModal();
-      return;
-    }
-
-    const cryptoPrice = await fetchTokenPrice();
-
-    if (!cryptoPrice?.data.price) {
-      toast.error("Failed to fetch MATIC price");
-      return;
-    }
-
-    const articleCryptoPrice = Number(
-      calculateMaticArticlePrice(articlePrice, cryptoPrice.data.price)
-    ).toString(16);
-
-    const accountBalance = await checkBalance(account);
-    console.log("accountBalance", accountBalance, articleCryptoPrice);
-
-    ethereum
-      .request({
-        method: "eth_sendTransaction",
-        params: [
-          {
-            from: account,
-            value: Number(
-              calculateMaticArticlePrice(articlePrice, cryptoPrice.data.price)
-            ).toString(16),
-            gas: Number(21000).toString(16),
-            to: "0x54639a506d5C0BF68e765775fb895c0d4413B5De",
-          },
-        ],
-      })
-      .then(async (txHash) => {
-        console.log("txHash", txHash);
-        const resp = await cryptoPaymentApiHandler(txHash);
-        console.log("response", resp);
-        // setIsProcessing(false);
-        const interval = setInterval(() => {
-          transactionStatusApi(resp.data.id).then((result) => {
-            console.log("result", result);
-            if (result.data.status === "minted") {
-              clearInterval(interval);
-              // reloadPage();
-              closeModal();
-              // dispatch(
-              //   updatePendingTransaction({
-              //     transaction_id: "",
-              //     nft_id: "",
-              //   })
-              // );
-
-              // queryClient.refetchQueries(["loadMyNfts", walletAddress]);
-            }
-            if (result.data.status === "mint_failed") {
-              clearInterval(interval);
-              // setIsProcessing(false);
-              closeModal();
-              // dispatch(
-              //   updatePendingTransaction({
-              //     transaction_id: "",
-              //     nft_id: "",
-              //   })
-              // );
-              toast.error("Payment failed");
-            }
-          });
-        }, 2000);
-      })
-      .catch((error) => {
-        // setIsProcessing(false);
-        toast.error(stripErrorCodes(error));
-      });
-  } catch (error) {
-    toast.error(error.message);
+  if (errorNetwork) {
+    toast.error(errorNetwork);
+    callback();
+    return;
   }
+
+  return await fetchTokenPrice();
 };
 
-export { connectWithMetamask, startCryptoPayment };
+export { connectWithMetamask, checkBalance, getTokenPrice };

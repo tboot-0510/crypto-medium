@@ -1,6 +1,6 @@
 import axios from "../lib/axios";
 
-const cryptoPaymentApiHandler = (txHash) =>
-  axios.post("user/crypto_payment", { txHash });
+const cryptoPaymentApiHandler = (txHash, postId) =>
+  axios.post("user/crypto_payment", { txHash, postId });
 
 export { cryptoPaymentApiHandler };

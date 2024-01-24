@@ -7,6 +7,11 @@ const cryptoPaymentSchema = new Schema(
       required: true,
       ref: "users",
     },
+    post: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: "posts",
+    },
     hash: {
       type: String,
       required: true,

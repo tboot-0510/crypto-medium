@@ -6,7 +6,7 @@ import { processWithError } from "../middelware/process_with_error.js";
 const postRouter = Router();
 
 postRouter.post("/write", isAuthenticated, writePost);
-postRouter.get("/:id", getPost);
+postRouter.get("/:id", processWithError(getPost));
 postRouter.get("/", getPosts);
 // postRouter.get("/recommendations", fetchRecommendationData);
 

@@ -39,10 +39,22 @@ export const userSlice = createSlice({
         externalWalletAccount: action.payload.account,
       },
     }),
+    updatePendingTransaction: (state, action) => ({
+      ...state,
+      informations: {
+        ...state.informations,
+        pendingTransactionId: action.payload.transaction_id,
+        pendingTransactionPostId: action.payload.post_id,
+      },
+    }),
   },
 });
 
-export const { loginUser, logoutUser, updateExternalWalletAddress } =
-  userSlice.actions;
+export const {
+  loginUser,
+  logoutUser,
+  updateExternalWalletAddress,
+  updatePendingTransaction,
+} = userSlice.actions;
 
 export default userSlice.reducer;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PostAuthor from "../components/postAuthor/PostAuthor";
 import { useQuery } from "@tanstack/react-query";
 import { getPostIdApiHandler } from "../api/postApi";
@@ -12,6 +12,7 @@ import { toUppercase } from "../utils/format";
 import CallToAction from "../reusable-elements/CallToAction/CallToAction";
 import { useModalContext } from "../context/ModalProvider";
 import UnlockPostModal from "../components/layout/UnlockPostModal";
+import Loading from "../reusable-elements/loading/Loading";
 
 const Post = () => {
   const { id } = useParams();
@@ -20,6 +21,8 @@ const Post = () => {
     userName: state.user.informations.name,
   }));
 
+  const [isProcessing, setIsProcessing] = useState(true);
+
   const { openModal } = useModalContext();
 
   const { data } = useQuery({
@@ -27,11 +30,14 @@ const Post = () => {
     queryFn: ({ queryKey }) => getPostIdApiHandler(queryKey[1]),
   });
 
-  const { title, markdown, createdAt, userId, membersOnly } = data?.data || [];
+  const { title, markdown, createdAt, userId, membersOnly, isLocked } =
+    data?.data.post || [];
 
   const unlockPost = () => {
     openModal({
-      contentElement: <UnlockPostModal />,
+      contentElement: (
+        <UnlockPostModal postId={id} setIsProcessing={setIsProcessing} />
+      ),
     });
   };
 
@@ -53,7 +59,7 @@ const Post = () => {
           <h1 className={styles["post-title"]}>{title}</h1>
           <PostAuthor userId={userId} createdAt={createdAt} />
           <div className="mt-24">{markdown}</div>
-          {membersOnly && (
+          {isLocked && (
             <div className="f jc-c ai-c">
               <div className={styles["post-fade-away"]} />
               <div className={styles["post-upgrade"]}>
@@ -70,34 +76,39 @@ const Post = () => {
                   </p>
                 </div>
                 <div className="f fd-r jc-c g-8 mt-32">
-                  <CallToAction
-                    // onClick={publishPost}
-                    type="primary"
-                    message="Upgrade"
-                    additionalStyle={{
-                      backgroundColor: "#1a8917",
-                      height: "37px",
-                      padding: "0 16px",
-                      border: "1px solid rgba(0,0,0,.15)",
-                      borderRadius: "99em",
-                      width: "fit-content",
-                      fontSize: "13px",
-                    }}
-                  />
-                  <CallToAction
-                    onClick={unlockPost}
-                    type="primary"
-                    message="Unlock now"
-                    additionalStyle={{
-                      backgroundColor: "#1a8917",
-                      height: "37px",
-                      padding: "0 16px",
-                      border: "1px solid rgba(0,0,0,.15)",
-                      borderRadius: "99em",
-                      width: "fit-content",
-                      fontSize: "13px",
-                    }}
-                  />
+                  {!isProcessing && (
+                    <>
+                      <CallToAction
+                        // onClick={publishPost}
+                        type="primary"
+                        message="Upgrade"
+                        additionalStyle={{
+                          backgroundColor: "#1a8917",
+                          height: "37px",
+                          padding: "0 16px",
+                          border: "1px solid rgba(0,0,0,.15)",
+                          borderRadius: "99em",
+                          width: "fit-content",
+                          fontSize: "13px",
+                        }}
+                      />
+                      <CallToAction
+                        onClick={unlockPost}
+                        type="primary"
+                        message="Unlock now"
+                        additionalStyle={{
+                          backgroundColor: "#1a8917",
+                          height: "37px",
+                          padding: "0 16px",
+                          border: "1px solid rgba(0,0,0,.15)",
+                          borderRadius: "99em",
+                          width: "fit-content",
+                          fontSize: "13px",
+                        }}
+                      />
+                    </>
+                  )}
+                  {isProcessing && <Loading />}
                 </div>
               </div>
             </div>
