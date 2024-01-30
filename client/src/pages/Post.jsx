@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import PostAuthor from "../components/postAuthor/PostAuthor";
 import { useQuery } from "@tanstack/react-query";
 import { getPostIdApiHandler } from "../api/postApi";
@@ -11,17 +11,20 @@ import { useSelector } from "react-redux";
 import { toUppercase } from "../utils/format";
 import CallToAction from "../reusable-elements/CallToAction/CallToAction";
 import { useModalContext } from "../context/ModalProvider";
-import UnlockPostModal from "../components/layout/UnlockPostModal";
+import UnlockPostModal from "../components/layout/modal/UnlockPostModal";
 import Loading from "../reusable-elements/loading/Loading";
+import Badge from "../reusable-elements/badge/Badge";
+import PostActions from "../components/postActions/postActions";
 
 const Post = () => {
   const { id } = useParams();
 
-  const { userName } = useSelector((state) => ({
-    userName: state.user.informations.name,
+  const { currentUserId, currentUsername } = useSelector((state) => ({
+    currentUsername: state.user.informations.name,
+    currentUserId: state.user.informations.id,
   }));
 
-  const [isProcessing, setIsProcessing] = useState(true);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const { openModal } = useModalContext();
 
@@ -30,8 +33,21 @@ const Post = () => {
     queryFn: ({ queryKey }) => getPostIdApiHandler(queryKey[1]),
   });
 
-  const { title, markdown, createdAt, userId, membersOnly, isLocked } =
-    data?.data.post || [];
+  const {
+    title,
+    markdown,
+    createdAt,
+    userId,
+    membersOnly,
+    isLocked,
+    tags,
+    votes,
+    isClapped,
+  } = data?.data.post || [];
+
+  if (title) {
+    document.title = title + " - Medium";
+  }
 
   const unlockPost = () => {
     openModal({
@@ -41,11 +57,16 @@ const Post = () => {
     });
   };
 
+  const [totalVotes, setTotalVotes] = useState(votes?.length);
+  const [clapped, setClapped] = useState(isClapped);
+
+  const isCurrentUser = currentUserId === userId?._id;
+
   return (
     <>
       <NavBar />
 
-      <div className="f jc-c h-100-p" style={{ minHeight: "100vh" }}>
+      <div className="f fd-c jc-c ai-c h-100-p" style={{ minHeight: "100vh" }}>
         <div className={styles["post"]}>
           <div className="mt-32" />
           {membersOnly && (
@@ -57,15 +78,23 @@ const Post = () => {
             </div>
           )}
           <h1 className={styles["post-title"]}>{title}</h1>
-          <PostAuthor userId={userId} createdAt={createdAt} />
+          <PostAuthor author={userId} createdAt={createdAt} />
+          <PostActions
+            postId={id}
+            isCurrentUser={isCurrentUser}
+            totalVotes={totalVotes}
+            setTotalVotes={setTotalVotes}
+            isClapped={clapped}
+            setIsClapped={setClapped}
+          />
           <div className="mt-24">{markdown}</div>
           {isLocked && (
             <div className="f jc-c ai-c">
               <div className={styles["post-fade-away"]} />
               <div className={styles["post-upgrade"]}>
                 <h2 className={styles["post-upgrade-title"]}>
-                  {toUppercase(userName)}, read the best stories from industry
-                  leaders on Medium.
+                  {toUppercase(currentUsername)}, read the best stories from
+                  industry leaders on Medium.
                 </h2>
                 <div className="mt-32">
                   <p>
@@ -113,6 +142,62 @@ const Post = () => {
               </div>
             </div>
           )}
+          <div className={styles["post-tags"]}>
+            {tags?.map((tag, index) => (
+              <Badge
+                key={index}
+                item={tag}
+                additionalStyle={{ padding: "8px 16px" }}
+              />
+            ))}
+          </div>
+          <PostActions
+            postId={id}
+            author={userId}
+            isCurrentUser={isCurrentUser}
+            totalVotes={totalVotes}
+            setTotalVotes={setTotalVotes}
+            isClapped={clapped}
+            setIsClapped={setClapped}
+            atEnd
+          />
+        </div>
+        <div className={styles["post-author-articles"]}>
+          <div className="f jc-c">
+            <div className="fd fa">
+              <div className="f ai-fe jc-sb mb-12">
+                <div
+                  className={styles.icon}
+                  style={
+                    // item.icon
+                    //   ? {
+                    //       backgroundImage: `url(${item.icon})`,
+                    //       backgroundColor: "transparent",
+                    //     }
+                    {
+                      backgroundColor: "green",
+                    }
+                  }
+                />
+              </div>
+              <div className="f ai-fs jc-sb">
+                <div>
+                  <div className="f ai-c"></div>
+                  <div className="f mt-8"></div>
+                  <div className="mt-16"></div>
+                </div>
+                <div>Following</div>
+                <div className="gj rt" />
+              </div>
+            </div>
+          </div>
+          <div className="f jc-c">
+            <div className="fd fa">
+              <div className="mt-40 mb-12">
+                <h2>More from Thomas Boot</h2>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </>

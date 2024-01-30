@@ -9,6 +9,7 @@ import ModalProvider from "./context/ModalProvider.jsx";
 import { Provider } from "react-redux";
 import store from "./store/store.js";
 import OverlayProvider from "./context/OverlayProvider.jsx";
+import PanelProvider from "./context/PanelProvider.jsx";
 
 const queryClient = new QueryClient();
 
@@ -17,11 +18,13 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <Provider store={store}>
       <BrowserRouter>
         <QueryClientProvider client={queryClient}>
-          <ModalProvider>
-            <OverlayProvider>
-              <App />
-            </OverlayProvider>
-          </ModalProvider>
+          <PanelProvider>
+            <ModalProvider>
+              <OverlayProvider>
+                <App />
+              </OverlayProvider>
+            </ModalProvider>
+          </PanelProvider>
         </QueryClientProvider>
       </BrowserRouter>
     </Provider>

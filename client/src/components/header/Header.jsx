@@ -2,26 +2,20 @@ import React from "react";
 import mediumLogo from "../../assets/medium.svg";
 import styles from "./header.module.scss";
 import { Link } from "react-router-dom";
+import { useModalContext } from "../../context/ModalProvider";
+import AuthenticationModal from "../layout/modal/AuthenticationModal";
 
 const nav = [
   {
-    title: "Membership",
-    to: "/membership",
-    style: {},
-  },
-  {
     title: "Write",
-    to: "/write",
     style: {},
   },
   {
     title: "Sign in",
-    to: "/signin",
     style: {},
   },
   {
     title: "Get started",
-    to: "/signup",
     style: {
       borderRadius: "99em",
       borderColor: "#000000",
@@ -34,6 +28,14 @@ const nav = [
 ];
 
 const Header = () => {
+  const { openModal } = useModalContext();
+
+  const openAuthModal = () => {
+    openModal({
+      contentElement: <AuthenticationModal />,
+    });
+  };
+
   return (
     <div className={styles.header}>
       <div className={styles["header-container"]}>
@@ -44,7 +46,7 @@ const Header = () => {
           <div className="f-1" />
           <div className="f fd-r ai-c g-24">
             {nav.map((navItem, key) => (
-              <Link key={key} to={navItem.to} style={navItem.style}>
+              <Link key={key} onClick={openAuthModal} style={navItem.style}>
                 {navItem.title}
               </Link>
             ))}

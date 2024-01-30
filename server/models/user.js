@@ -28,6 +28,18 @@ const userSchema = new Schema(
         return !this.walletAccount;
       },
     },
+    interests: [{ type: Schema.Types.ObjectId, ref: "tags" }],
+    ignoredPosts: [{ type: Schema.Types.ObjectId, ref: "posts" }],
+    ignoredAuthors: [{ type: Schema.Types.ObjectId, ref: "users" }],
+    savedPosts: [
+      {
+        name: { type: String },
+        posts: [{ type: Schema.Types.ObjectId, ref: "posts" }],
+        images: [{ type: String }],
+      },
+    ],
+    followers: [{ type: Schema.Types.ObjectId, ref: "users" }],
+    followings: [{ type: Schema.Types.ObjectId, ref: "users" }],
     walletAccount: {
       type: Schema.Types.ObjectId,
       ref: "wallet",

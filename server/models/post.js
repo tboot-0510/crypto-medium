@@ -15,7 +15,7 @@ const postSchema = new Schema(
       required: true,
       ref: "users",
     },
-    tags: [{ type: String, required: true }],
+    tags: [{ type: String, required: true, ref: "tags" }],
     votes: [{ type: Schema.Types.ObjectId, ref: "users" }],
     comments: [
       {

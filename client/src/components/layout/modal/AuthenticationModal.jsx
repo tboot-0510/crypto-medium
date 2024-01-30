@@ -1,20 +1,20 @@
 import { useState } from "react";
-import CallToAction from "../../reusable-elements/CallToAction/CallToAction";
-import { loginApiHandler } from "../../api/loginApi";
-import GoogleIcon from "../../assets/google_icon.svg";
-import MetamaskIcon from "../../assets/metamask_icon.svg";
+import CallToAction from "../../../reusable-elements/CallToAction/CallToAction";
+import { loginApiHandler } from "../../../api/loginApi";
+import GoogleIcon from "../../../assets/google_icon.svg";
+import MetamaskIcon from "../../../assets/metamask_icon.svg";
 
 import styles from "./authenticationModal.module.scss";
 import { Envelope } from "@phosphor-icons/react/dist/ssr";
-import SignUpForm from "../forms/SignUpForm";
-import { connectWithMetamask } from "../../utils/connectors/metamask";
+import SignUpForm from "../../forms/SignUpForm";
+import { connectWithMetamask } from "../../../utils/connectors/metamask";
 import { useDispatch } from "react-redux";
 import {
   loginUser,
   updateExternalWalletAddress,
-} from "../../store/slices/userSlice";
-import { SIGNIN, SIGNUP } from "../../utils/constants";
-import { useModalContext } from "../../context/ModalProvider";
+} from "../../../store/slices/userSlice";
+import { SIGNIN, SIGNUP } from "../../../utils/constants";
+import { useModalContext } from "../../../context/ModalProvider";
 
 const AuthenticationModal = () => {
   const [step, updateStep] = useState({ id: 0, provenance: null });

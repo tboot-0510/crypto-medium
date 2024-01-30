@@ -14,6 +14,7 @@ const CallToAction = (props) => {
     additionalPill,
     additionalClassNames,
     iconAtTheEnd,
+    centerText,
     addSpace,
     buttonType = "button",
   } = props;
@@ -62,7 +63,7 @@ const CallToAction = (props) => {
           )}
         </>
       ) : (
-        <div className="f w-100-p ai-c jc-sb">
+        <div className={`f w-100-p ai-c ${centerText ? "jc-c" : "jc-sb"}`}>
           {!!icon && (
             <div className={`f ai-c ${message && "mr-8"}`}>{icon}</div>
           )}

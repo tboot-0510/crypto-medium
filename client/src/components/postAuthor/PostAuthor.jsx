@@ -1,75 +1,71 @@
-import React from "react";
-import styles from "./postAuthor.module.scss";
 import { formatDateTime, generateIcon, toUppercase } from "../../utils/format";
-import {
-  clapIcon,
-  commentIcon,
-  listenIcon,
-  moreIcon,
-  mutePost,
-  savePost,
-  shareIcon,
-} from "../../assets/icons";
+import Jazzicon from "react-jazzicon";
+import styles from "./postAuthor.module.scss";
 
-const PostAuthor = () => {
-  const item = { icon: "", author: "Thomas Boot", pubDate: "" };
+const getBackground = (account, icon) => {
+  if (icon)
+    return {
+      backgroundImage: `url(${icon})`,
+      backgroundColor: "transparent",
+    };
+  if (account)
+    return {
+      backgroundColor: "transparent",
+    };
+  return {
+    backgroundColor: "green",
+  };
+};
+
+const PostAuthor = ({ author, createdAt }) => {
   const linkElement = "";
+
+  if (!author) return;
+
+  const { username, walletAccount, icon } = author;
+
+  const externalWalletAccount = walletAccount?.externalAccountId;
+  const hasIconOrExternalWallet = externalWalletAccount || icon;
 
   return (
     <div className="f fd-c">
       <div className="f fd-r">
         <div
           className={styles.icon}
-          style={
-            item.icon
-              ? {
-                  backgroundImage: `url(${item.icon})`,
-                  backgroundColor: "transparent",
-                }
-              : {
-                  backgroundColor: "green",
-                }
-          }
+          style={getBackground(externalWalletAccount, icon)}
         >
-          <a className={styles.icon} href={linkElement}>
+          {externalWalletAccount && (
+            <Jazzicon
+              diameter={44}
+              seed={parseInt(externalWalletAccount.slice(2, 10), 16)}
+            />
+          )}
+          <a className={styles["icon-title"]} href={linkElement}>
             {/* <img src={""} width="24" height="24" alt={item.author} /> */}
-            {!item.icon && (
+            {!hasIconOrExternalWallet && (
               <div className="f jc-c ai-c">
-                {toUppercase(generateIcon(item.author))}
+                {toUppercase(generateIcon(username))}
               </div>
             )}
           </a>
         </div>
         <div className="f fd-c ml-12 w-100-p">
-          <div style={{ flex: "1 1 0%" }}>
+          {/* <div style={{ flex: "1 1 0%" }}> */}
+          <div>
             <span className={styles["span-title"]}>
-              <div>{item.author}</div>
+              <div>{username}</div>
               <hr className={styles.separator} />
             </span>
           </div>
           <div>
             <span className={styles["span-subtitle"]}>
-              <div>3 min</div>
-              {/* {formatDateTime(item.pubDate)} */}
+              <div>3 min read</div>
+              <span className="f jc-c ai-c" style={{ margin: "0px 4px" }}>
+                ·
+              </span>
+              {formatDateTime(createdAt, true)}
             </span>
           </div>
-        </div>
-      </div>
-      <div className={styles["post-actions"]}>
-        <div className="f ai-c">
-          <div style={{ width: "74px" }}>
-            <div className="f fd-r ai-c">
-              {clapIcon}
-              {commentIcon}
-            </div>
-          </div>
-        </div>
-
-        <div className="f fd-r ai-c g-12">
-          <span style={{ cursor: "pointer" }}>{savePost}</span>
-          <span style={{ cursor: "pointer" }}>{listenIcon}</span>
-          <span style={{ cursor: "pointer" }}>{shareIcon}</span>
-          <span style={{ cursor: "pointer" }}>{moreIcon}</span>
         </div>
       </div>
     </div>

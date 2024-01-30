@@ -1,9 +1,21 @@
 .icon {
     height: 48px;
     width: 48px;
+    min-width: 48px;
+    min-height: 48px;
     border: 2px solid rgb(255, 255, 255);
     border-radius: 50%;
     background-color: #F2F2F2;
+}
+
+.icon-title {
+    height: 48px;
+    width: 48px;
+    min-width: 48px;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .span-title {
@@ -17,6 +29,8 @@
 }
 
 .span-subtitle {
+    display: flex;
+    flex-direction: row;
     color: #6B6B6B;
     font-size: 14px;
 }
@@ -26,13 +40,4 @@
     height: 1px;
     border: 0px;
     margin: 0px;
-}
-
-.post-actions {
-    display: flex;
-    justify-content: space-between;
-    padding: 3px 8px;
-    margin: 32px 0px 0px;
-    border-bottom: 1px solid rgb(242, 242, 242);
-    border-top: 1px solid rgb(242, 242, 242);
 }

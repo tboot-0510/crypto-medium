@@ -1,0 +1,15 @@
+.trending-section {
+    margin: 0 64px;
+    max-width: 1192px;
+    width: 100%;
+}
+
+.trending-grid {
+    margin-right: -16px;
+    margin-left: -16px;
+    width: calc(100% + 32px);
+    flex-wrap: wrap;
+    align-items: flex-start;
+    flex-direction: row;
+    display: flex;
+}

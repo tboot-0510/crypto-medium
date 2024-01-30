@@ -9,6 +9,8 @@ import Overlay from "./components/overlay/Overlay";
 import Post from "./pages/Post";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Panel from "./components/panel/Panel";
+import Topics from "./pages/topics/Topics";
 
 function App() {
   return (
@@ -42,8 +44,10 @@ function App() {
             </AuthenticatedRoute>
           }
         />
+        <Route path="/get-started/topics" element={<Topics />} />
       </Routes>
       <Modal />
+      <Panel />
       <Overlay />
     </>
   );

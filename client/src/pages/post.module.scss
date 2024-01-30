@@ -40,3 +40,25 @@
     font-feature-settings: "pnum", "lnum";
     font-weight: 400;
 }
+
+.post-tags {
+    display: flex;
+    max-width: 680px;
+    margin-top: 68px;
+    margin-bottom: 26px;
+}
+
+.post-author-articles {
+    background-color: #F9F9F9;
+    padding-top: 72px;
+    width: 100%;
+}
+
+.icon {
+    height: 48px;
+    width: 48px;
+    border: 2px solid rgb(255, 255, 255);
+    border-radius: 50%;
+    background-color: #F2F2F2;
+}
+

@@ -1,11 +1,16 @@
-import React from "react";
 import styles from "./post.module.scss";
 import { formatDateTime, generateIcon, toUppercase } from "../../utils/format";
 import Badge from "../../reusable-elements/badge/Badge";
 import { moreIcon, mutePost, savePost, starIcon } from "../../assets/icons";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Post = ({ item, index }) => {
+  const { currentUserId, currentUsername } = useSelector((state) => ({
+    currentUsername: state.user.informations.name,
+    currentUserId: state.user.informations.id,
+  }));
+
   const navigate = useNavigate();
   const showMoreText = (text) => {
     if (text.length < 130) return text;

@@ -20,9 +20,19 @@ const getPostIdApiHandler = (postId) => {
   return axios.get(`/post/${postId}`);
 };
 
+const getPostVoteApiHandler = (postId) => {
+  return axios.get(`/post/${postId}/votes`);
+};
+
+const getTrendingPostsApiHandler = () => {
+  return axios.get("/post/trending");
+};
+
 export {
   makePostApiHandler,
   editPostApiHandler,
   getPostIdApiHandler,
   getPostsApiHandler,
+  getPostVoteApiHandler,
+  getTrendingPostsApiHandler,
 };

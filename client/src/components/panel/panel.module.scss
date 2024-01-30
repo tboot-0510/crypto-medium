@@ -1,0 +1,90 @@
+@import '../../../scss/variables';
+
+@mixin animationSlideInFromRight($duration) {
+    @keyframes slideInFromRight {
+        0% {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        100% {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    animation: slideInFromRight #{$duration}ms;
+}
+
+@mixin animationSlideOutToRight($duration) {
+    @keyframes slideOutToRight {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(100%);
+        }
+    }
+    animation: slideOutToRight #{$duration}ms;
+}
+
+@mixin animationFadeIn($duration) {
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            // opacity: 1;
+        }
+    }
+    // animation: fadeIn #{$duration}ms $timing-function #{$delay}ms;
+    animation: fadeIn #{$duration}ms;
+}
+
+.closing-panel {
+    @include animationSlideOutToRight(500);
+}
+
+.opening-panel {
+    @include animationSlideInFromRight(500);
+}
+
+.Panel-blur-container {
+    @include animationFadeIn(500);
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--modal-overlay);
+    opacity: 0.4;
+    z-index: $standard-z-index-0;
+
+    &:hover {
+        cursor: url("../../../../icons/cursor-close.svg") 28 28,auto;
+    }
+}
+.Panel-container {
+    position: fixed;
+    top: 0px;
+    bottom: 0;
+    right: 0;
+    width: 800px;
+    height: 100%;
+    box-sizing: border-box;
+    z-index: $panel-z-index;
+    overflow-x: auto;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 4px 12px;
+
+    .Panel-content {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        background-color: #fff;
+        box-sizing: border-box;
+        overflow-y: overlay;
+
+        .Panel-content-element {
+            flex: 1;
+            overflow-y: auto;
+        }
+    }
+}

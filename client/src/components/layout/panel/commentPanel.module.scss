@@ -1,0 +1,45 @@
+.comment-section {
+    padding: 14px 0px;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 2px 8px;
+    width: 100%;
+}
+
+.comment-author {
+    padding: 0px 14px;
+    margin-bottom: 6px;
+    max-height: 100px;
+    position: relative;
+}
+
+.comment-input {
+    min-height: 100px;
+    flex-direction: column;
+}
+
+.comment-textbox {
+    position: "relative"; 
+    outline: "none"; 
+    white-space: pre-wrap; 
+    overflow-wrap: break-word; 
+    min-height: 24px;
+}
+
+.comment-textbox-placeholder {
+    position: absolute; 
+    pointer-events: none; 
+    width: 100%; 
+    max-width: 100%; 
+    display: block; 
+    opacity: 0.333; 
+    user-select: none; 
+    text-decoration: none;
+}
+
+.icon {
+    height: 32px;
+    width: 32px;
+    min-width: 32px;
+    min-height: 32px;
+    border-radius: 50%;
+    background-color: #F2F2F2;
+}

@@ -3,7 +3,7 @@ import styles from "./hero.module.scss";
 import mediumLogo from "../../assets/dynamic_medium.svg";
 import CallToAction from "../../reusable-elements/CallToAction/CallToAction";
 import { useModalContext } from "../../context/ModalProvider";
-import AuthenticationModal from "../layout/AuthenticationModal";
+import AuthenticationModal from "../layout/modal/AuthenticationModal";
 
 const Hero = () => {
   const { openModal } = useModalContext();
@@ -36,6 +36,7 @@ const Hero = () => {
                 type="primary"
                 message="Start reading"
                 onClick={openAuthModal}
+                centerText
                 additionalStyle={{
                   width: "213px",
                   fontSize: "20px",

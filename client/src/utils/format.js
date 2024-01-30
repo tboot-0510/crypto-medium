@@ -1,11 +1,14 @@
-export const formatDateTime = (utcDateString) => {
+export const formatDateTime = (utcDateString, withYear = false) => {
   const utcDate = new Date(utcDateString);
 
-  const options = {
-    // year: "numeric",
+  let options = {
     month: "short",
     day: "numeric",
   };
+
+  if (withYear) {
+    options.year = "numeric";
+  }
 
   return new Intl.DateTimeFormat("en-US", options).format(utcDate);
 };

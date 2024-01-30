@@ -1,18 +1,21 @@
 import { useCallback, useState } from "react";
 import { toast } from "react-toastify";
 import styles from "./authenticationModal.module.scss";
-import MetamaskIcon from "../../assets/metamask_icon.svg";
+import MetamaskIcon from "../../../assets/metamask_icon.svg";
 import { Coins } from "@phosphor-icons/react";
-import CallToAction from "../../reusable-elements/CallToAction/CallToAction";
+import CallToAction from "../../../reusable-elements/CallToAction/CallToAction";
 import { useSelector, useDispatch } from "react-redux";
 import { useQueryClient } from "@tanstack/react-query";
-import { useModalContext } from "../../context/ModalProvider";
-import { checkBalance, getTokenPrice } from "../../utils/connectors/metamask";
-import { calculateMaticArticlePrice } from "../../utils/format";
-import { cryptoPaymentApiHandler } from "../../api/userApi";
-import { updatePendingTransaction } from "../../store/slices/userSlice";
-import { transactionStatusApi } from "../../api/transactionApi";
-import { stripErrorCodes } from "../../utils/connectors/helpers";
+import { useModalContext } from "../../../context/ModalProvider";
+import {
+  checkBalance,
+  getTokenPrice,
+} from "../../../utils/connectors/metamask";
+import { calculateMaticArticlePrice } from "../../../utils/format";
+import { cryptoPaymentApiHandler } from "../../../api/userApi";
+import { updatePendingTransaction } from "../../../store/slices/userSlice";
+import { transactionStatusApi } from "../../../api/transactionApi";
+import { stripErrorCodes } from "../../../utils/connectors/helpers";
 
 const { ethereum } = window;
 

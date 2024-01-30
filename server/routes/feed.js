@@ -1,12 +1,15 @@
 import { Router } from "express";
 import {
-  fetchTopicData,
-  fetchRecommendationData,
+  getTagRecommendations,
+  getRSSTagTopics,
+  getSuggestionPosts,
 } from "../controllers/feedController.js";
+import { processWithError } from "../middelware/process_with_error.js";
 
 const feedRouter = Router();
 
-feedRouter.post("/tag", fetchTopicData);
-feedRouter.get("/recommendations", fetchRecommendationData);
+feedRouter.post("/tag", processWithError(getRSSTagTopics));
+feedRouter.get("suggestions", processWithError(getSuggestionPosts));
+feedRouter.get("/recommendations", processWithError(getTagRecommendations));
 
 export default feedRouter;

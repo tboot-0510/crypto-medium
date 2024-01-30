@@ -1,0 +1,28 @@
+
+.post-actions {
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 8px;
+    margin: 32px 0px 0px;   
+}
+
+.post-icon {
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 0;
+}
+
+.post-icon-disable {
+    cursor: not-allowed;
+}
+
+.post-actions-with-border {
+    border-bottom: 1px solid rgb(242, 242, 242);
+    border-top: 1px solid rgb(242, 242, 242);
+}
+
+.post-actions-footer {
+    margin-bottom: 88px;
+}
