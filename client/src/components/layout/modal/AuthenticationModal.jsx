@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import CallToAction from "../../../reusable-elements/CallToAction/CallToAction";
 import { loginApiHandler } from "../../../api/loginApi";
 import GoogleIcon from "../../../assets/google_icon.svg";
 import MetamaskIcon from "../../../assets/metamask_icon.svg";
+import { toast } from "react-toastify";
 
 import styles from "./authenticationModal.module.scss";
 import { Envelope } from "@phosphor-icons/react/dist/ssr";
@@ -12,6 +13,7 @@ import { useDispatch } from "react-redux";
 import {
   loginUser,
   updateExternalWalletAddress,
+  updateUserId,
 } from "../../../store/slices/userSlice";
 import { SIGNIN, SIGNUP } from "../../../utils/constants";
 import { useModalContext } from "../../../context/ModalProvider";
@@ -21,28 +23,59 @@ const AuthenticationModal = () => {
   const dispatch = useDispatch();
   const { closeModal } = useModalContext();
 
+  const handleGoogleAuth = () => {
+    const rootUrl = "https://accounts.google.com/o/oauth2/v2/auth";
+    const options = {
+      redirect_uri: import.meta.env.VITE_GOOGLE_OAUTH_REDIRECT_URL,
+      client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+      access_type: "offline",
+      response_type: "code",
+      prompt: "consent",
+      scope: [
+        "https://www.googleapis.com/auth/userinfo.profile",
+        "https://www.googleapis.com/auth/userinfo.email",
+      ].join(" "),
+    };
+    const qs = new URLSearchParams(options);
+    window.location.assign(`${rootUrl}?${qs.toString()}`);
+  };
+
   const metaMaskConnection = (actionType) => {
-    connectWithMetamask(actionType)
-      .then((resp) => {
-        console.log("resp?.data", resp);
-        if (resp?.data) {
-          if (actionType === SIGNUP) {
-            dispatch(
-              updateExternalWalletAddress({ account: resp?.data.user.username })
-            );
-            updateStep({ id: 3, provenance: 1 });
-            return;
+    try {
+      connectWithMetamask(actionType)
+        .then((resp) => {
+          console.log("resp?.data", resp?.data);
+          if (resp?.data) {
+            if (actionType === SIGNUP) {
+              dispatch(
+                updateExternalWalletAddress({
+                  account: resp?.data.user.walletAccount.externalAccountId,
+                })
+              );
+              dispatch(
+                updateUserId({
+                  _id: resp?.data.user.walletAccount.userId,
+                })
+              );
+              updateStep({ id: 3, provenance: 1 });
+              return;
+            }
+            if (actionType === SIGNIN) {
+              dispatch(loginUser(resp.data.user));
+              closeModal();
+              return;
+            }
           }
-          if (actionType === SIGNIN) {
-            dispatch(loginUser(resp.data.user));
-            closeModal();
-            return;
+        })
+        .catch((e) => {
+          console.log("error", e);
+          if (e.response?.data?.message?.message) {
+            toast.error(e.response.data.message.message);
           }
-        }
-      })
-      .catch((e) => {
-        console.log("error", e);
-      });
+        });
+    } catch (e) {
+      console.log("ERROR", e);
+    }
   };
 
   const stepComponents = {
@@ -51,7 +84,7 @@ const AuthenticationModal = () => {
       terms_keyword: "Sign up",
       google: {
         text: "Sign up with Google",
-        onClick: loginApiHandler,
+        onClick: handleGoogleAuth,
       },
       email: {
         text: "Sign up with email",
@@ -173,12 +206,11 @@ const AuthenticationModal = () => {
             </div>
           </div>
         )}
-        {stepId === 1 ||
-          (stepId === 3 && (
-            <div className="f fd-c ai-c mt-48 g-12">
-              {stepComponents[stepId]?.element}
-            </div>
-          ))}
+        {(stepId === 1 || stepId === 3) && (
+          <div className="f fd-c ai-c mt-48 g-12">
+            {stepComponents[stepId]?.element}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -35,6 +35,7 @@ axiosInstance.interceptors.response.use(
         console.log("axios Error", error);
       }
     }
+    return Promise.reject(error);
   }
 );
 

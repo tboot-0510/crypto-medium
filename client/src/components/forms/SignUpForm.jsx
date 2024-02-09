@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { validateEmail } from "../../utils/validations";
 import CallToAction from "../../reusable-elements/CallToAction/CallToAction";
 import { CaretLeft } from "@phosphor-icons/react";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import styles from "./forms.module.scss";
@@ -26,6 +27,7 @@ const SignUpForm = ({ step, updateStep }) => {
   const [error, setError] = useState(null);
 
   const dispatch = useDispatch();
+  const { navigate } = useNavigate();
   const { closeModal } = useModalContext();
 
   const { account } = useSelector((state) => ({
@@ -81,6 +83,9 @@ const SignUpForm = ({ step, updateStep }) => {
       .then((response) => {
         localStorage.setItem("autenticated", true);
         dispatch(loginUser(response.data.user));
+        navigate("/get-started/topics", {
+          state: { userId: response.data.user._id },
+        });
 
         closeModal();
       })

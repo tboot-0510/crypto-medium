@@ -383,3 +383,12 @@ export const trendingIcon = (
     </defs>
   </svg>
 );
+
+export const checkIcon = (
+  <svg width="18" height="18" viewBox="0 0 18 18" fill="#1A8917">
+    <path
+      d="M3.72 9.85l3.7 3.7.9.91.67-1.1 5.3-8.79-1.72-1.03-5.3 8.8 1.57-.2-3.7-3.7-1.42 1.41z"
+      stroke="fff"
+    ></path>
+  </svg>
+);

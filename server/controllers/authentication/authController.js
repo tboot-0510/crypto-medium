@@ -10,6 +10,38 @@ import {
 import { generateCookies, sendCookies } from "../cookies/generateCookies.js";
 import { errorWithStatusCode } from "../../middelware/error_handler.js";
 
+const handleGoogleAuth = async (req, res) => {
+  const { id_token, access_token } = await getUserFromCode(req.query.code);
+
+  const user = await userDetails(access_token, id_token);
+  console.log("user", user);
+  let foundUser = await User.findByEmail(user.email);
+  console.log("foudnUser", foundUser);
+  if (foundUser.length == 0) {
+    const newUser = new User({
+      email: email,
+      username: username,
+      // name: name,
+      authenticationToken: "created",
+    });
+
+    foundUser = await newUser.save();
+  }
+
+  const { accessToken, refreshToken } = generateCookies({
+    currenUserId: foundUser._id,
+  });
+
+  foundUser.authenticationToken = refreshToken;
+  await foundUser.save();
+
+  sendCookies(res, accessToken, refreshToken);
+
+  res.redirect(
+    `${env.CLIENT_URL}/oauth/redirect?uid=${foundUser._id}&access_token=${accessToken}&refresh_token=${refreshToken}`
+  );
+};
+
 const handleLogin = async (req, res) => {
   const users = await User.find();
   const foundUser = users.find((user) => user.email === req.email);
@@ -125,6 +157,44 @@ const handleMeApi = async (req, res) => {
   res.status(200).send({ user: user });
 };
 
+async function getUserFromCode(code) {
+  const url = "https://oauth2.googleapis.com/token";
+  const values = {
+    code,
+    client_id: env.clientid,
+    client_secret: env.clientsecret,
+    redirect_uri: env.redirect_url,
+    grant_type: "authorization_code",
+  };
+
+  try {
+    const res = await axios.post(url, qs.stringify(values), {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    });
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function userDetails(access_token, id_token) {
+  return axios
+    .get(
+      `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${access_token}`,
+      {
+        headers: {
+          Authorization: `Bearer ${id_token}`,
+        },
+      }
+    )
+    .then((res) => res.data)
+    .catch((error) => {
+      console.error(`Failed to fetch user`);
+    });
+}
+
 export {
   handleLogin,
   handleSignUp,
@@ -135,4 +205,5 @@ export {
   handleMetamaskSignIn,
   handleMetamaskSignUp,
   getMessageToSign,
+  handleGoogleAuth,
 };

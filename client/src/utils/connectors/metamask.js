@@ -78,29 +78,27 @@ const connectWithMetamask = async (type) => {
 
     if (connectionInfo && connectionInfo.account && connectionInfo.chainId) {
       const { account, chainId } = connectionInfo;
-      try {
-        const { message } = (
-          await walletAuthMessageToSign({
-            account,
-            chain_id: chainId,
-          })
-        ).data;
-        const msgParams = formatMessage(chainId, message);
-        const signature = await getSignature({ from: account, msgParams });
 
-        return await walletConnectApiHandler({
-          signatureParams: msgParams,
-          signature,
-          type,
-        });
-      } catch (error) {
-        console.log("error", error);
-        toast.error(error.message);
-        return error;
-      }
+      const { message } = (
+        await walletAuthMessageToSign({
+          account,
+          chain_id: chainId,
+        })
+      ).data;
+      const msgParams = formatMessage(chainId, message);
+      const signature = await getSignature({ from: account, msgParams });
+
+      const resp = await walletConnectApiHandler({
+        signatureParams: msgParams,
+        signature,
+        type,
+      });
+
+      return resp;
     }
-  } catch (err) {
-    toast.error(err.message);
+  } catch (error) {
+    console.log("error", error);
+    throw error;
   }
 };
 

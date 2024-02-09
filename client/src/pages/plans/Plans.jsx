@@ -6,11 +6,11 @@ import Badge from "../../reusable-elements/badge/Badge";
 import { plusIcon } from "../../assets/icons";
 import { useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
-import styles from "./topics.module.scss";
+import styles from "./plans.module.scss";
 import CallToAction from "../../reusable-elements/CallToAction/CallToAction";
 import { toast } from "react-toastify";
 
-const Topics = () => {
+const Plans = () => {
   const [topics, setTopics] = useState([]);
 
   const { currentUserId } = useSelector((state) => ({
@@ -58,7 +58,7 @@ const Topics = () => {
               <img src={mediumLogo} className="logo react" alt="Medium logo" />
             </div>
             <div className="mt-64">
-              <h2>What are you interested in?</h2>
+              <h2>Support great writing and access all stories on Medium.</h2>
             </div>
             <div className="mt-16">
               <p>Choose three or more.</p>
@@ -108,4 +108,4 @@ const Topics = () => {
   );
 };
 
-export default Topics;
+export default Plans;

@@ -9,6 +9,7 @@ import {
   handleSignUpWeb3,
   handleMetamaskSignUp,
   handleMetamaskSignIn,
+  handleGoogleAuth,
 } from "../controllers/authentication/authController.js";
 import isAuthenticated from "../middelware/authentication.js";
 import { processWithError } from "../middelware/process_with_error.js";
@@ -22,6 +23,7 @@ authRouter.post("/signup_web3", processWithError(handleSignUpWeb3));
 authRouter.get("/refresh", processWithError(handleRefreshToken));
 authRouter.get("/me", isAuthenticated, processWithError(handleMeApi));
 authRouter.get("/start_sign_in_web3", processWithError(getMessageToSign));
+authRouter.route("/google/oauth").get(handleGoogleAuth);
 authRouter.get(
   "/wallet_callback",
   processWithError(async (req, res) => {

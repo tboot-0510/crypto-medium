@@ -11,6 +11,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Panel from "./components/panel/Panel";
 import Topics from "./pages/topics/Topics";
+import Plans from "./pages/plans/Plans";
+import AuthRedirect from "./pages/AuthRedirect";
 
 function App() {
   return (
@@ -44,7 +46,23 @@ function App() {
             </AuthenticatedRoute>
           }
         />
-        <Route path="/get-started/topics" element={<Topics />} />
+        <Route
+          path="/get-started/topics"
+          element={
+            <AuthenticatedRoute>
+              <Topics />
+            </AuthenticatedRoute>
+          }
+        />
+        <Route
+          path="/get-started/plans"
+          element={
+            // <AuthenticatedRoute>
+            <Plans />
+            // </AuthenticatedRoute>
+          }
+        />
+        <Route path="/oauth/redirect" element={<AuthRedirect />} />
       </Routes>
       <Modal />
       <Panel />

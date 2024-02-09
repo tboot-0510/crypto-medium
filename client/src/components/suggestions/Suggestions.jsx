@@ -19,8 +19,8 @@ const Suggestions = ({ type, text, onClick, children }) => {
       },
       child: ({ data }) => (
         <div className="f fw-w g-8 ai-fs">
-          {data?.data?.map((item, index) => (
-            <Badge key={index} item={item} />
+          {data?.data?.tags?.map((item, index) => (
+            <Badge key={index} item={item.name} />
           ))}
         </div>
       ),
@@ -31,7 +31,7 @@ const Suggestions = ({ type, text, onClick, children }) => {
         queryKey: ["suggestions"],
       },
       child: ({ data }) => {
-        data?.data?.map((item, index) => <Card key={index} item={item} />);
+        data?.data?.map((item, index) => <Card key={index} item={item.name} />);
       },
     },
   };

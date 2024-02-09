@@ -129,7 +129,7 @@ const handleMetamaskSignUp = async (signatureParams, signature) => {
 const handleSignUpWeb3 = async (req, res) => {
   const { name, username, account } = req.body?.user;
 
-  if (!name && !username)
+  if (!name && !username && !account)
     throw errorWithStatusCode(400, {
       message: "User params not provided",
     });
